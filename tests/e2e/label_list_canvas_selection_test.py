@@ -10,11 +10,13 @@ from pytestqt.qtbot import QtBot
 
 from labelme._app import MainWindow
 from labelme._widgets._canvas import Canvas
+from labelme._widgets._shape_render import bounds as _shape_bounds
 
 from ..conftest import close_or_pause
 from .conftest import MainWinFactory
 from .conftest import click_canvas_fraction
 from .conftest import draw_triangle
+from .conftest import image_to_widget_pos
 from .conftest import schedule_on_dialog
 from .conftest import select_shape
 from .conftest import show_window_and_wait_for_imagedata
@@ -178,6 +180,59 @@ def test_delete_shape_removes_label_list_entry(
     win.delete_selected_shapes()
     qtbot.waitUntil(lambda: len(label_list) == count_before - 1)
     assert len(canvas.shapes) == count_before - 1
+
+    close_or_pause(qtbot=qtbot, widget=win, pause=pause)
+
+
+@pytest.mark.gui
+def test_canvas_context_menu_relabels_selected_shape_and_undoes(
+    *,
+    qtbot: QtBot,
+    annotated_win: MainWindow,
+    monkeypatch: pytest.MonkeyPatch,
+    pause: bool,
+) -> None:
+    win = annotated_win
+    canvas = win._canvas_widgets.canvas
+    target_shape = canvas.shapes[0]
+    original_label = target_shape.label
+    win._switch_canvas_mode(edit=False, create_mode="rectangle")
+
+    first_action = canvas.context_menu.actions()[0]
+    label_menu = first_action.menu()
+    assert label_menu is not None
+    chosen_labels: list[str] = []
+
+    def relabel_from_menu(*_args: object, **_kwargs: object) -> None:
+        canvas.context_menu.aboutToShow.emit()
+        assert first_action.isEnabled()
+        label_menu.aboutToShow.emit()
+        current_action = next(
+            a for a in label_menu.actions() if a.text() == original_label
+        )
+        target_action = next(
+            a for a in label_menu.actions() if a.text() != original_label
+        )
+        assert current_action.isChecked()
+        chosen_labels.append(target_action.text())
+        target_action.trigger()
+
+    monkeypatch.setattr(canvas.context_menu, "exec", relabel_from_menu)
+    pos = image_to_widget_pos(
+        canvas=canvas, image_pos=_shape_bounds(shape=target_shape).center()
+    )
+    qtbot.mouseClick(canvas, Qt.MouseButton.RightButton, pos=pos)
+    qtbot.wait(50)
+
+    assert len(chosen_labels) == 1
+    target_label = chosen_labels[0]
+    assert canvas.shapes[0].label == target_label
+    assert target_label in win._docks.label_list[0].text()
+    assert win._actions.undo.isEnabled()
+
+    win._actions.undo.trigger()
+
+    assert canvas.shapes[0].label == original_label
 
     close_or_pause(qtbot=qtbot, widget=win, pause=pause)
 

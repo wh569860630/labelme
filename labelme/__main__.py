@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+# ruff: noqa: I001 -- import order is required for frozen Windows builds
+
 import argparse
 import contextlib
 import io
@@ -13,20 +15,23 @@ from pathlib import Path
 from typing import AnyStr
 from typing import Final
 
+import onnxruntime  # noqa: F401
 from loguru import logger
+
+from labelme import _frozen  # noqa: F401
+
 from PySide6 import QtCore
 from PySide6 import QtWidgets
 
 from labelme import __appname__
 from labelme import __version__
-
-from . import _config
-from . import _locale
-from . import _yaml
-from ._app import MainWindow
-from ._label_file import is_label_file_path
-from ._utils import apply_color_theme
-from ._utils import new_icon
+from labelme import _config
+from labelme import _locale
+from labelme import _yaml
+from labelme._app import MainWindow
+from labelme._label_file import is_label_file_path
+from labelme._utils import apply_color_theme
+from labelme._utils import new_icon
 
 _LOGGER_LEVELS: Final = (  # noqa: GR011 -- parametrized by tests
     "debug",

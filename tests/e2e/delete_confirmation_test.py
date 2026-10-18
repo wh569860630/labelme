@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Final
 
 import pytest
+from PySide6 import QtCore
 from PySide6 import QtWidgets
 from pytestqt.qtbot import QtBot
 
@@ -133,7 +134,11 @@ def test_delete_shapes_without_confirmation_and_undo(
     monkeypatch.setattr(QtWidgets.QMessageBox, "exec", _capture_dialog)
 
     canvas.select_shapes(shapes=canvas.shapes[:delete_count])
-    win._actions.delete.trigger()
+    assert win._actions.delete.isEnabled()
+    win.activateWindow()
+    canvas.setFocus()
+    qtbot.wait(50)
+    qtbot.keyClick(canvas, QtCore.Qt.Key.Key_F)
     assert shown_messages == []
     qtbot.waitUntil(
         lambda: len(canvas.shapes) == shape_count - delete_count,

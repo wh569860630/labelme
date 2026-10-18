@@ -483,6 +483,7 @@ class MainWindow(QtWidgets.QMainWindow):
             tip=self.tr("Delete the selected shapes"),
             enabled=False,
         )
+        delete.setShortcuts([*delete.shortcuts(), QtGui.QKeySequence("F")])
         edit = action(
             text=self.tr("&Edit Label"),
             slot=self._edit_label,
@@ -563,6 +564,9 @@ class MainWindow(QtWidgets.QMainWindow):
             icon="phosphor/polygon.svg",
             tip=self.tr("Start drawing polygons"),
         )
+        create_mode.setShortcuts(
+            [*create_mode.shortcuts(), QtGui.QKeySequence("Q")]
+        )
         edit_mode = image_action(
             text=self.tr("Edit Shapes"),
             slot=lambda: self._switch_canvas_mode(edit=True, create_mode=None),
@@ -571,12 +575,18 @@ class MainWindow(QtWidgets.QMainWindow):
             tip=self.tr("Move and edit the selected shapes"),
             enabled=False,
         )
+        edit_mode.setShortcuts(
+            [*edit_mode.shortcuts(), QtGui.QKeySequence("R")]
+        )
         create_rectangle_mode = image_action(
             text=self.tr("Rectangle"),
             slot=lambda: self._switch_canvas_mode(edit=False, create_mode="rectangle"),
             shortcut=shortcuts["create_rectangle"],
             icon="phosphor/rectangle.svg",
             tip=self.tr("Start drawing rectangles"),
+        )
+        create_rectangle_mode.setShortcuts(
+            [*create_rectangle_mode.shortcuts(), QtGui.QKeySequence("W")]
         )
         create_oriented_rectangle_mode = image_action(
             text=self.tr("Oriented Rectangle"),
@@ -586,6 +596,12 @@ class MainWindow(QtWidgets.QMainWindow):
             shortcut=shortcuts["create_oriented_rectangle"],
             icon="oriented_rectangle.svg",
             tip=self.tr("Start drawing oriented rectangles"),
+        )
+        create_oriented_rectangle_mode.setShortcuts(
+            [
+                *create_oriented_rectangle_mode.shortcuts(),
+                QtGui.QKeySequence("E"),
+            ]
         )
         create_circle_mode = image_action(
             text=self.tr("Circle"),
@@ -819,11 +835,21 @@ class MainWindow(QtWidgets.QMainWindow):
             ("ai_points_to_shape", create_ai_points_to_shape_mode),
             ("ai_box_to_shape", create_ai_box_to_shape_mode),
         ]
+        label_menu = QtWidgets.QMenu(self.tr("Label"), self)
+        label_menu.setIcon(_utils.new_icon("phosphor/tag.svg"))
+        label_menu.aboutToShow.connect(
+            functools.partial(self._populate_label_context_menu, menu=label_menu)
+        )
+        self._canvas_widgets.canvas.context_menu.aboutToShow.connect(
+            functools.partial(self._populate_label_context_menu, menu=label_menu)
+        )
         # Both menus follow the platform Edit-menu convention: history first,
         # then the clipboard group, then the actions that alter a shape.
         history = (undo, undo_last_point)
         clipboard = (copy, paste, duplicate)
         context_menu = (
+            label_menu.menuAction(),
+            separator(),
             *[draw_action for _, draw_action in draw],
             edit_mode,
             separator(),
@@ -1603,6 +1629,50 @@ class MainWindow(QtWidgets.QMainWindow):
         return _is_valid_label(
             label=label, existing_labels=existing_labels, policy=policy
         )
+
+    def _populate_label_context_menu(self, *, menu: QtWidgets.QMenu) -> None:
+        menu.clear()
+        selected_shapes = self._canvas_widgets.canvas.selected_shapes
+        menu.menuAction().setEnabled(bool(selected_shapes))
+        unique_labels = self._docks.unique_label_list
+        for row in range(unique_labels.count()):
+            item = unique_labels.item(row)
+            assert item is not None
+            label = item.data(Qt.ItemDataRole.UserRole)
+            assert isinstance(label, str)
+            action = menu.addAction(label)
+            action.setCheckable(True)
+            action.setChecked(
+                bool(selected_shapes)
+                and all(shape.label == label for shape in selected_shapes)
+            )
+            action.setEnabled(bool(selected_shapes))
+            action.triggered.connect(
+                functools.partial(self._set_selected_shapes_label, label=label)
+            )
+
+    def _set_selected_shapes_label(self, *, label: str) -> None:
+        items = self._docks.label_list.selected_items()
+        if not items or all(
+            (shape := item.shape()) is not None and shape.label == label
+            for item in items
+        ):
+            return
+
+        fill_rgb = self._get_rgb_by_label(
+            label=label,
+            unique_label_list=self._docks.unique_label_list,
+        )
+        for item in items:
+            shape = item.shape()
+            assert shape is not None
+            shape.label = label
+            item.set_label(text=format_shape_label(shape=shape), color=fill_rgb)
+
+        self._label_dialog.add_label_history(label=label)
+        self._canvas_widgets.canvas.backup_shapes()
+        self._canvas_widgets.canvas.update()
+        self.mark_dirty()
 
     def _edit_label(self) -> None:
         items = self._docks.label_list.selected_items()

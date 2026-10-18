@@ -1062,8 +1062,8 @@ class Canvas(QtWidgets.QWidget):
         if button == Qt.MouseButton.LeftButton:
             self._press_left(pos=pos, event=event)
             return
-        if button == Qt.MouseButton.RightButton and self.mode == _CanvasMode.EDIT:
-            self._press_right(pos=pos, event=event)
+        if button == Qt.MouseButton.RightButton:
+            self._press_right(pos=pos)
             return
         if button == Qt.MouseButton.MiddleButton and (
             self._is_image_overflowing_viewport() or not self._view_offset.isNull()
@@ -1239,16 +1239,9 @@ class Canvas(QtWidgets.QWidget):
             return self.remove_selected_point()
         return False
 
-    def _press_right(self, *, pos: QPointF, event: QtGui.QMouseEvent) -> None:
-        if _should_reselect_on_right_press(
-            selected_shapes=self.selected_shapes, hovered_shape=self.hovered_shape
-        ):
-            self._select_shape_point(
-                pos,
-                multiple_selection_mode=event.modifiers()
-                == Qt.KeyboardModifier.ControlModifier,
-            )
-            self.update()
+    def _press_right(self, *, pos: QPointF) -> None:
+        clicked_shape = self._find_shape_at_point(pos)
+        self.select_shapes(shapes=[] if clicked_shape is None else [clicked_shape])
         self._prev_point = pos
 
     def _begin_pan(self, *, event: QtGui.QMouseEvent) -> None:
@@ -2230,16 +2223,6 @@ def _compute_intersection_edges_image(
     if exit_axis == "x":
         return QPointF(start_x, np.clip(p2.y(), 0.0, height))
     return QPointF(np.clip(p2.x(), 0.0, width), start_y)
-
-
-def _should_reselect_on_right_press(
-    *, selected_shapes: list[Shape], hovered_shape: Shape | None
-) -> bool:
-    if not selected_shapes:
-        return True
-    if hovered_shape is None:
-        return False
-    return hovered_shape not in selected_shapes
 
 
 def _pick_pending_moved_shape(

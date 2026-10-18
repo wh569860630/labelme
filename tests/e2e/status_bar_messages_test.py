@@ -5,6 +5,7 @@ from typing import Final
 
 import pytest
 from PySide6.QtCore import QPointF
+from PySide6.QtCore import Qt
 from PySide6.QtCore import QTimer
 from pytestqt.qtbot import QtBot
 
@@ -15,6 +16,52 @@ from ..conftest import close_or_pause
 from .conftest import MainWinFactory
 from .conftest import dismiss_active_modal
 from .conftest import show_window_and_wait_for_imagedata
+
+
+@pytest.mark.gui
+@pytest.mark.parametrize(
+    ("key", "create_mode"),
+    [
+        (Qt.Key.Key_Q, "polygon"),
+        (Qt.Key.Key_W, "rectangle"),
+        (Qt.Key.Key_E, "oriented_rectangle"),
+    ],
+)
+def test_single_key_shortcuts_select_shape_mode(
+    *,
+    raw_win: MainWindow,
+    qtbot: QtBot,
+    key: Qt.Key,
+    create_mode: str,
+) -> None:
+    canvas = raw_win._canvas_widgets.canvas
+    raw_win._actions.edit_mode.trigger()
+    raw_win.activateWindow()
+    canvas.setFocus()
+    qtbot.wait(50)
+
+    qtbot.keyClick(canvas, key)
+
+    assert canvas.mode == _CanvasMode.CREATE
+    assert canvas.create_mode == create_mode
+
+
+@pytest.mark.gui
+def test_r_shortcut_selects_edit_mode(
+    *,
+    raw_win: MainWindow,
+    qtbot: QtBot,
+) -> None:
+    canvas = raw_win._canvas_widgets.canvas
+    raw_win._actions.create_mode.trigger()
+    assert canvas.mode == _CanvasMode.CREATE
+    raw_win.activateWindow()
+    canvas.setFocus()
+    qtbot.wait(50)
+
+    qtbot.keyClick(canvas, Qt.Key.Key_R)
+
+    assert canvas.mode == _CanvasMode.EDIT
 
 
 @pytest.mark.gui

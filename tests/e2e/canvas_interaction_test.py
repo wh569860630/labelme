@@ -807,7 +807,7 @@ def test_select_point_shape_by_click(
 
 
 @pytest.mark.gui
-def test_right_click_on_shape_opens_context_menu(
+def test_right_click_targets_shape_and_updates_context_delete(
     *,
     qtbot: QtBot,
     annotated_win: MainWindow,
@@ -815,21 +815,51 @@ def test_right_click_on_shape_opens_context_menu(
     pause: bool,
 ) -> None:
     canvas = annotated_win._canvas_widgets.canvas
-    menu_opened: list[int] = []
+    delete_action = annotated_win._actions.delete
+    label_action = canvas.context_menu.actions()[0]
+    menu_states: list[tuple[list[Shape], bool, bool]] = []
+
+    def capture_menu_state(*_args: object, **_kwargs: object) -> None:
+        canvas.context_menu.aboutToShow.emit()
+        menu_states.append(
+            (
+                list(canvas.selected_shapes),
+                delete_action.isEnabled(),
+                label_action.isEnabled(),
+            )
+        )
+
     monkeypatch.setattr(
         canvas.context_menu,
         "exec",
-        lambda *_args, **_kwargs: menu_opened.append(0) or None,
+        capture_menu_state,
     )
 
-    bounds_center = _shape_bounds(shape=canvas.shapes[_SHAPE_INDEX]).center()
+    annotated_win._switch_canvas_mode(edit=False, create_mode="rectangle")
+    target_shape = canvas.shapes[_SHAPE_INDEX]
+    bounds_center = _shape_bounds(shape=target_shape).center()
     pos = image_to_widget_pos(canvas=canvas, image_pos=bounds_center)
-    qtbot.mouseMove(canvas, pos=pos)
-    qtbot.wait(50)
     qtbot.mouseClick(canvas, Qt.MouseButton.RightButton, pos=pos)
     qtbot.wait(50)
 
-    assert menu_opened == [0]
+    assert menu_states == [([target_shape], True, True)]
+    shape_count = len(canvas.shapes)
+    delete_action.trigger()
+    qtbot.waitUntil(lambda: len(canvas.shapes) == shape_count - 1)
+    assert target_shape not in canvas.shapes
+
+    canvas.select_shapes(shapes=[canvas.shapes[0]])
+    empty_image_pos = next(
+        QPointF(x, y)
+        for x in (0.0, canvas.pixmap.width() - 1.0)
+        for y in (0.0, canvas.pixmap.height() - 1.0)
+        if canvas._find_shape_at_point(QPointF(x, y)) is None
+    )
+    empty_pos = image_to_widget_pos(canvas=canvas, image_pos=empty_image_pos)
+    qtbot.mouseClick(canvas, Qt.MouseButton.RightButton, pos=empty_pos)
+    qtbot.wait(50)
+
+    assert menu_states[-1] == ([], False, False)
 
     close_or_pause(qtbot=qtbot, widget=annotated_win, pause=pause)
 
