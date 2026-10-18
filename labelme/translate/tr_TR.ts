@@ -92,6 +92,33 @@
     </message>
 </context>
 <context>
+    <name>AnnotationFolderFooter</name>
+    <message>
+        <source>Annotation Folder</source>
+        <translation>Açıklama Klasörü</translation>
+    </message>
+    <message>
+        <source>Next to Images</source>
+        <translation>Görüntülerin yanında</translation>
+    </message>
+    <message>
+        <source>Choose Annotation Folder…</source>
+        <translation>Açıklama Klasörünü Seç…</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated in</source>
+        <translation>{total} görüntüden {annotated} tanesi açıklamalı:</translation>
+    </message>
+    <message>
+        <source>Not found: %s · next to images</source>
+        <translation>Bulunamadı: %s · görüntülerin yanında</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated · next to images</source>
+        <translation>{total} görüntüden {annotated} tanesi açıklamalı · görüntülerin yanında</translation>
+    </message>
+</context>
+<context>
     <name>BrightnessContrastDialog</name>
     <message>
         <source>Brightness/Contrast</source>
@@ -111,6 +138,10 @@
     <message>
         <source>Click &amp; drag to move point</source>
         <translation>Noktayı taşımak için tıklayın &amp; sürükleyin</translation>
+    </message>
+    <message>
+        <source>Shape is locked</source>
+        <translation>Şekil kilitli</translation>
     </message>
     <message>
         <source>Click &amp; drag to move shape</source>
@@ -212,16 +243,16 @@
         <translation>Etiketlemeye başla</translation>
     </message>
     <message>
-        <source>Open an image or a directory of images to begin.</source>
+        <source>Open an image or a folder of images to begin.</source>
         <translation>Başlamak için bir görüntü veya görüntü klasörü açın.</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Klasör Aç</translation>
     </message>
     <message>
         <source>Open Image</source>
         <translation>Görüntü Aç</translation>
-    </message>
-    <message>
-        <source>Open Directory</source>
-        <translation>Klasör Aç</translation>
     </message>
     <message>
         <source>Or drag and drop image files here</source>
@@ -266,8 +297,8 @@
         <translation>Dosya Adı Ara</translation>
     </message>
     <message>
-        <source>File List</source>
-        <translation>Dosya Listesi</translation>
+        <source>Image List</source>
+        <translation>Görüntü Listesi</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
@@ -282,14 +313,6 @@
 </source>
         <translation>&amp;Aç
 </translation>
-    </message>
-    <message>
-        <source>Open image or label file</source>
-        <translation>Görüntü veya etiket dosyası aç</translation>
-    </message>
-    <message>
-        <source>Open Dir</source>
-        <translation>Dizin Aç</translation>
     </message>
     <message>
         <source>&amp;Next Image</source>
@@ -314,28 +337,8 @@
 </translation>
     </message>
     <message>
-        <source>Save labels to file</source>
-        <translation>Etiketleri dosyaya kaydet</translation>
-    </message>
-    <message>
         <source>&amp;Save As</source>
         <translation>&amp;Farklı Kaydet</translation>
-    </message>
-    <message>
-        <source>&amp;Delete File</source>
-        <translation>Dosyayı &amp;Sil</translation>
-    </message>
-    <message>
-        <source>Delete current label file</source>
-        <translation>Geçerli etiket dosyasını sil</translation>
-    </message>
-    <message>
-        <source>&amp;Change Output Dir</source>
-        <translation>Çıktı Dizinini &amp;Değiştir</translation>
-    </message>
-    <message>
-        <source>Change where annotations are loaded/saved</source>
-        <translation>Açıklamaların yüklendiği ve kaydedildiği konumu değiştir</translation>
     </message>
     <message>
         <source>Save &amp;Automatically</source>
@@ -388,6 +391,34 @@
     <message>
         <source>Delete Shapes</source>
         <translation>Şekilleri Sil</translation>
+    </message>
+    <message>
+        <source>Save the annotation file</source>
+        <translation>Açıklama dosyasını kaydet</translation>
+    </message>
+    <message>
+        <source>Save the annotation file under a new name</source>
+        <translation>Açıklama dosyasını yeni bir adla kaydet</translation>
+    </message>
+    <message>
+        <source>Embed Image in Annotation File</source>
+        <translation>Görüntüyü Açıklama Dosyasına Göm</translation>
+    </message>
+    <message>
+        <source>Store a copy of the image inside the annotation file</source>
+        <translation>Görüntünün bir kopyasını açıklama dosyasının içinde saklar</translation>
+    </message>
+    <message>
+        <source>Open an image or annotation file</source>
+        <translation>Görüntü veya açıklama dosyası aç</translation>
+    </message>
+    <message>
+        <source>&amp;Delete Annotation File</source>
+        <translation>Açıklama Dosyasını &amp;Sil</translation>
+    </message>
+    <message>
+        <source>Delete the current annotation file</source>
+        <translation>Geçerli açıklama dosyasını sil</translation>
     </message>
     <message>
         <source>Delete the selected shapes</source>
@@ -482,16 +513,20 @@ Shapes</source>
         <translation>Etiketi &amp;Düzenle</translation>
     </message>
     <message>
-        <source>Save the labels under a new file name</source>
-        <translation>Etiketleri yeni bir dosya adıyla kaydet</translation>
+        <source>Change &amp;Annotation Folder…</source>
+        <translation>&amp;Açıklama Klasörünü Değiştir…</translation>
     </message>
     <message>
-        <source>Embed Image in Label File</source>
-        <translation>Görüntüyü Etiket Dosyasına Göm</translation>
+        <source>Choose where annotation files are read and saved</source>
+        <translation>Açıklama dosyalarının okunup kaydedileceği yeri seçin</translation>
     </message>
     <message>
-        <source>Store a copy of the image inside the label file</source>
-        <translation>Görüntünün bir kopyasını etiket dosyasının içinde saklar</translation>
+        <source>Open Folder…</source>
+        <translation>Klasör Aç…</translation>
+    </message>
+    <message>
+        <source>Open a folder of images</source>
+        <translation>Görüntü klasörü aç</translation>
     </message>
     <message>
         <source>Modify the label of the selected shape</source>
@@ -522,6 +557,14 @@ Shapes</source>
         <translation>Seçili maske şekillerini tek şekilde birleştir</translation>
     </message>
     <message>
+        <source>Lock Shapes</source>
+        <translation>Şekilleri Kilitle</translation>
+    </message>
+    <message>
+        <source>Lock the selected shapes against editing, or unlock them</source>
+        <translation>Seçili şekilleri düzenlemeye karşı kilitle veya kilidini aç</translation>
+    </message>
+    <message>
         <source>Delete Selected Vertex</source>
         <translation>Seçili Köşe Noktasını Sil</translation>
     </message>
@@ -542,12 +585,8 @@ Shapes</source>
         <translation>Pencere yeniden boyutlandırıldığında görüntünün tamamını görünür tut</translation>
     </message>
     <message>
-        <source>Fit to Wi&amp;dth</source>
-        <translation>&amp;Genişliğe Sığdır</translation>
-    </message>
-    <message>
-        <source>Match the image width to the window when it is resized</source>
-        <translation>Pencere yeniden boyutlandırıldığında görüntü genişliğini pencereye eşitle</translation>
+        <source>Zoom to the selected shapes whenever the selection changes</source>
+        <translation>Seçim her değiştiğinde seçili şekillere yakınlaştır</translation>
     </message>
     <message>
         <source>Make the image appear larger</source>
@@ -606,8 +645,8 @@ Shapes</source>
         <translation>Seçimin sağındaki en yakın şekli seç</translation>
     </message>
     <message>
-        <source>Ctrl+Wheel zooms the canvas</source>
-        <translation>Ctrl+Tekerlek tuvali yakınlaştırır</translation>
+        <source>Fit to Window</source>
+        <translation>Pencereye Sığdır</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -626,8 +665,20 @@ Shapes</source>
         <translation>&amp;Yardım</translation>
     </message>
     <message>
+        <source>More tools</source>
+        <translation>Diğer araçlar</translation>
+    </message>
+    <message>
+        <source>More shape tools</source>
+        <translation>Diğer şekil araçları</translation>
+    </message>
+    <message>
         <source>%s started.</source>
         <translation>%s başlatıldı.</translation>
+    </message>
+    <message>
+        <source>Retry</source>
+        <translation>Yeniden dene</translation>
     </message>
     <message>
         <source>Choose a label to start drawing with it. Press &apos;Esc&apos; to clear the selection.</source>
@@ -658,6 +709,10 @@ Shapes</source>
         <translation>Varsayılanlarla devam et</translation>
     </message>
     <message>
+        <source>Fit to S&amp;election</source>
+        <translation>&amp;Seçime Sığdır</translation>
+    </message>
+    <message>
         <source>Could not reset the Config File.
 %s</source>
         <translation>Yapılandırma dosyası sıfırlanamadı.
@@ -666,6 +721,10 @@ Shapes</source>
     <message>
         <source>Configuration backup saved to %s</source>
         <translation>Yapılandırma yedeği %s konumuna kaydedildi</translation>
+    </message>
+    <message>
+        <source>Saving…</source>
+        <translation>Kaydediliyor…</translation>
     </message>
     <message>
         <source>Mask Output Unavailable</source>
@@ -688,8 +747,16 @@ AI Text-to-Annotation modelini &apos;SAM3 (smart)&apos; olarak değiştirin veya
         <translation>&apos;{}&apos; etiketi &apos;{}&apos; doğrulama türüne göre geçersiz</translation>
     </message>
     <message>
-        <source>Error saving label data</source>
-        <translation>Etiket verileri kaydedilirken hata oluştu</translation>
+        <source>Unlock Shapes</source>
+        <translation>Şekillerin Kilidini Aç</translation>
+    </message>
+    <message>
+        <source>Saved</source>
+        <translation>Kaydedildi</translation>
+    </message>
+    <message>
+        <source>Save failed</source>
+        <translation>Kaydetme başarısız</translation>
     </message>
     <message>
         <source>&lt;b&gt;%s&lt;/b&gt;</source>
@@ -698,6 +765,14 @@ AI Text-to-Annotation modelini &apos;SAM3 (smart)&apos; olarak değiştirin veya
     <message>
         <source>AI inference failed: %s</source>
         <translation>Yapay zeka çıkarımı başarısız oldu: %s</translation>
+    </message>
+    <message>
+        <source>Fit to Selection</source>
+        <translation>Seçime Sığdır</translation>
+    </message>
+    <message>
+        <source>Error saving annotation file</source>
+        <translation>Açıklama dosyası kaydedilirken hata oluştu</translation>
     </message>
     <message>
         <source>Large image</source>
@@ -740,22 +815,6 @@ AI Text-to-Annotation modelini &apos;SAM3 (smart)&apos; olarak değiştirin veya
         <translation>%s - Görüntü veya Açıklamaları Aç</translation>
     </message>
     <message>
-        <source>%s - Save/Load Annotations in Directory</source>
-        <translation>%s - Dizine Açıklama Kaydet/Dizinden Açıklama Yükle</translation>
-    </message>
-    <message>
-        <source>%s . Annotations will be saved/loaded in %s</source>
-        <translation>%s . Açıklamalar %s dizinine kaydedilecek veya bu dizinden yüklenecek</translation>
-    </message>
-    <message>
-        <source>Label files (*%s)</source>
-        <translation>Etiket dosyaları (*%s)</translation>
-    </message>
-    <message>
-        <source>Choose File</source>
-        <translation>Dosya Seç</translation>
-    </message>
-    <message>
         <source>Attention</source>
         <translation>Dikkat</translation>
     </message>
@@ -778,6 +837,14 @@ AI Text-to-Annotation modelini &apos;SAM3 (smart)&apos; olarak değiştirin veya
     <message>
         <source>Unsaved changes</source>
         <translation>Kaydedilmemiş değişiklikler</translation>
+    </message>
+    <message>
+        <source>The selected annotation file could not be opened: {path}</source>
+        <translation>Seçilen açıklama dosyası açılamadı: {path}</translation>
+    </message>
+    <message>
+        <source>Annotation Folder not found: %s</source>
+        <translation>Açıklama Klasörü bulunamadı: %s</translation>
     </message>
     <message>
         <source>%s - Browse Image Folder</source>
@@ -854,6 +921,14 @@ Please select a different model or use AI-Box mode.</source>
 Lütfen farklı bir model seçin veya AI-Box modunu kullanın.</translation>
     </message>
     <message>
+        <source>%s - Choose Annotation Folder</source>
+        <translation>%s - Açıklama Klasörünü Seç</translation>
+    </message>
+    <message>
+        <source>Annotation Folder: %s</source>
+        <translation>Açıklama Klasörü: %s</translation>
+    </message>
+    <message>
         <source>Image not found</source>
         <translation>Görüntü bulunamadı</translation>
     </message>
@@ -866,8 +941,8 @@ Expected location: {path}</source>
 Beklenen konum: {path}</translation>
     </message>
     <message>
-        <source>File list is disabled when a label file is opened</source>
-        <translation>Bir etiket dosyası açıkken dosya listesi devre dışı kalır</translation>
+        <source>Image List is disabled when an annotation file is opened</source>
+        <translation>Bir açıklama dosyası açıkken görüntü listesi devre dışı kalır</translation>
     </message>
     <message>
         <source>Add Point to Edge</source>
@@ -882,16 +957,8 @@ Beklenen konum: {path}</translation>
         <translation>Önceki &amp;Yakınlaştırmayı Koru</translation>
     </message>
     <message>
-        <source>Permanently delete this label file? This action cannot be undone.</source>
-        <translation>Bu etiket dosyası kalıcı olarak silinsin mi? Bu işlem geri alınamaz.</translation>
-    </message>
-    <message>
         <source>Allowed formats: {formats}</source>
         <translation>İzin verilen biçimler: {formats}</translation>
-    </message>
-    <message>
-        <source>The selected label file could not be opened: {path}</source>
-        <translation>Seçilen etiket dosyası açılamadı: {path}</translation>
     </message>
     <message>
         <source>The selected image file could not be opened: {path}</source>
@@ -928,6 +995,22 @@ Beklenen konum: {path}</translation>
     <message>
         <source>Settings are managed via --config for this session</source>
         <translation>Bu oturumda ayarlar --config ile yönetiliyor</translation>
+    </message>
+    <message>
+        <source>Save Annotation File</source>
+        <translation>Açıklama Dosyasını Kaydet</translation>
+    </message>
+    <message>
+        <source>Annotation files (*%s)</source>
+        <translation>Açıklama dosyaları (*%s)</translation>
+    </message>
+    <message>
+        <source>Permanently delete this annotation file? This action cannot be undone.</source>
+        <translation>Bu açıklama dosyası kalıcı olarak silinsin mi? Bu işlem geri alınamaz.</translation>
+    </message>
+    <message>
+        <source>Error deleting annotation file</source>
+        <translation>Açıklama dosyası silinirken hata oluştu</translation>
     </message>
     <message>
         <source>Configuration Error</source>
@@ -1123,8 +1206,8 @@ Beklenen konum: {path}</translation>
         <translation>otomatik kaydet otomatik kayıt</translation>
     </message>
     <message>
-        <source>Embeds the image in the label JSON file.</source>
-        <translation>Görüntüyü etiket JSON dosyasına gömer.</translation>
+        <source>Embed image in annotation file</source>
+        <translation>Görüntüyü açıklama dosyasına göm</translation>
     </message>
     <message>
         <source>Shape Color Mode</source>
@@ -1211,8 +1294,8 @@ Beklenen konum: {path}</translation>
         <translation>Önceden tanımlı etiketler</translation>
     </message>
     <message>
-        <source>Embed image in label file</source>
-        <translation>Görüntüyü etiket dosyasına göm</translation>
+        <source>Embeds the image in the annotation file.</source>
+        <translation>Görüntüyü açıklama dosyasına gömer.</translation>
     </message>
     <message>
         <source>Label validation</source>
@@ -1349,6 +1432,24 @@ Beklenen konum: {path}</translation>
     <message>
         <source>Predefined image flags</source>
         <translation>Önceden tanımlı görüntü bayrakları</translation>
+    </message>
+</context>
+<context>
+    <name>ToolBar</name>
+    <message>
+        <source>More actions</source>
+        <translation>Diğer işlemler</translation>
+    </message>
+</context>
+<context>
+    <name>ZoomWidget</name>
+    <message>
+        <source>Zoom</source>
+        <translation>Yakınlaştırma</translation>
+    </message>
+    <message>
+        <source>Ctrl+Wheel zooms the canvas</source>
+        <translation>Ctrl+Tekerlek tuvali yakınlaştırır</translation>
     </message>
 </context>
 <context>

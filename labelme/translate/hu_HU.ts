@@ -92,6 +92,33 @@
     </message>
 </context>
 <context>
+    <name>AnnotationFolderFooter</name>
+    <message>
+        <source>Annotation Folder</source>
+        <translation>Annotációs mappa</translation>
+    </message>
+    <message>
+        <source>Next to Images</source>
+        <translation>A képek mellett</translation>
+    </message>
+    <message>
+        <source>Choose Annotation Folder…</source>
+        <translation>Annotációs mappa kiválasztása…</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated in</source>
+        <translation>{annotated}/{total} annotálva itt:</translation>
+    </message>
+    <message>
+        <source>Not found: %s · next to images</source>
+        <translation>Nem található: %s · a képek mellett</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated · next to images</source>
+        <translation>{annotated}/{total} annotálva · a képek mellett</translation>
+    </message>
+</context>
+<context>
     <name>BrightnessContrastDialog</name>
     <message>
         <source>Brightness/Contrast</source>
@@ -169,6 +196,10 @@
         <translation>ALT + Kattintás pont létrehozásához az alakzaton</translation>
     </message>
     <message>
+        <source>Shape is locked</source>
+        <translation>Az alakzat zárolva van</translation>
+    </message>
+    <message>
         <source>Click &amp; drag to move shape</source>
         <translation>Kattintson és húzza az alakzat mozgatásához</translation>
     </message>
@@ -212,16 +243,16 @@
         <translation>Annotálás indítása</translation>
     </message>
     <message>
-        <source>Open an image or a directory of images to begin.</source>
+        <source>Open an image or a folder of images to begin.</source>
         <translation>A kezdéshez nyisson meg egy képet vagy egy képeket tartalmazó mappát.</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Mappa megnyitása</translation>
     </message>
     <message>
         <source>Open Image</source>
         <translation>Kép megnyitása</translation>
-    </message>
-    <message>
-        <source>Open Directory</source>
-        <translation>Mappa megnyitása</translation>
     </message>
     <message>
         <source>Or drag and drop image files here</source>
@@ -266,8 +297,8 @@
         <translation>Fájlnév keresése</translation>
     </message>
     <message>
-        <source>File List</source>
-        <translation>Fájllista</translation>
+        <source>Image List</source>
+        <translation>Képlista</translation>
     </message>
     <message>
         <source>&amp;Quit</source>
@@ -282,14 +313,6 @@
 </source>
         <translation>&amp;Megnyitás
 </translation>
-    </message>
-    <message>
-        <source>Open image or label file</source>
-        <translation>Kép vagy címke fájl megnyitása</translation>
-    </message>
-    <message>
-        <source>Open Dir</source>
-        <translation>Könyvtár megnyitása</translation>
     </message>
     <message>
         <source>&amp;Next Image</source>
@@ -314,28 +337,8 @@
 </translation>
     </message>
     <message>
-        <source>Save labels to file</source>
-        <translation>Címkék mentése fájlba</translation>
-    </message>
-    <message>
         <source>&amp;Save As</source>
         <translation>Mentés &amp;másként</translation>
-    </message>
-    <message>
-        <source>&amp;Delete File</source>
-        <translation>&amp;Fájl törlése</translation>
-    </message>
-    <message>
-        <source>Delete current label file</source>
-        <translation>Jelenlegi címke fájl törlése</translation>
-    </message>
-    <message>
-        <source>&amp;Change Output Dir</source>
-        <translation>&amp;Kimeneti könyvtár módosítása</translation>
-    </message>
-    <message>
-        <source>Change where annotations are loaded/saved</source>
-        <translation>Az annotációk betöltési/mentési helyének módosítása</translation>
     </message>
     <message>
         <source>Save &amp;Automatically</source>
@@ -392,6 +395,34 @@
     <message>
         <source>Delete Shapes</source>
         <translation>Alakzatok törlése</translation>
+    </message>
+    <message>
+        <source>Save the annotation file</source>
+        <translation>Annotációs fájl mentése</translation>
+    </message>
+    <message>
+        <source>Save the annotation file under a new name</source>
+        <translation>Annotációs fájl mentése új néven</translation>
+    </message>
+    <message>
+        <source>Embed Image in Annotation File</source>
+        <translation>Kép beágyazása az annotációs fájlba</translation>
+    </message>
+    <message>
+        <source>Store a copy of the image inside the annotation file</source>
+        <translation>A kép másolatát az annotációs fájlban tárolja</translation>
+    </message>
+    <message>
+        <source>Open an image or annotation file</source>
+        <translation>Kép vagy annotációs fájl megnyitása</translation>
+    </message>
+    <message>
+        <source>&amp;Delete Annotation File</source>
+        <translation>Annotációs fájl &amp;törlése</translation>
+    </message>
+    <message>
+        <source>Delete the current annotation file</source>
+        <translation>A jelenlegi annotációs fájl törlése</translation>
     </message>
     <message>
         <source>Delete the selected shapes</source>
@@ -502,16 +533,20 @@ Shapes</source>
         <translation>Előző fényerő/kontraszt megtartása</translation>
     </message>
     <message>
-        <source>Save the labels under a new file name</source>
-        <translation>Címkék mentése új fájlnéven</translation>
+        <source>Change &amp;Annotation Folder…</source>
+        <translation>&amp;Annotációs mappa módosítása…</translation>
     </message>
     <message>
-        <source>Embed Image in Label File</source>
-        <translation>Kép beágyazása a címkefájlba</translation>
+        <source>Choose where annotation files are read and saved</source>
+        <translation>Annotációs fájlok olvasási és mentési helyének kiválasztása</translation>
     </message>
     <message>
-        <source>Store a copy of the image inside the label file</source>
-        <translation>A kép másolatát a címkefájlban tárolja</translation>
+        <source>Open Folder…</source>
+        <translation>Mappa megnyitása…</translation>
+    </message>
+    <message>
+        <source>Open a folder of images</source>
+        <translation>Képeket tartalmazó mappa megnyitása</translation>
     </message>
     <message>
         <source>Copy to Clipboard</source>
@@ -538,6 +573,14 @@ Shapes</source>
         <translation>A kijelölt maszk alakzatok egyesítése eggyé</translation>
     </message>
     <message>
+        <source>Lock Shapes</source>
+        <translation>Alakzatok zárolása</translation>
+    </message>
+    <message>
+        <source>Lock the selected shapes against editing, or unlock them</source>
+        <translation>A kijelölt alakzatok zárolása a szerkesztés ellen, vagy a zárolás feloldása</translation>
+    </message>
+    <message>
         <source>Delete Selected Vertex</source>
         <translation>Kijelölt csúcspont törlése</translation>
     </message>
@@ -558,12 +601,8 @@ Shapes</source>
         <translation>A teljes kép látható marad az ablak átméretezésekor</translation>
     </message>
     <message>
-        <source>Fit to Wi&amp;dth</source>
-        <translation>&amp;Szélességhez igazítás</translation>
-    </message>
-    <message>
-        <source>Match the image width to the window when it is resized</source>
-        <translation>A kép szélessége az ablakhoz igazodik annak átméretezésekor</translation>
+        <source>Zoom to the selected shapes whenever the selection changes</source>
+        <translation>Nagyítás a kijelölt alakzatokra a kijelölés minden változásakor</translation>
     </message>
     <message>
         <source>Make the image appear larger</source>
@@ -614,8 +653,8 @@ Shapes</source>
         <translation>A kijelöléstől jobbra lévő legközelebbi alakzat kijelölése</translation>
     </message>
     <message>
-        <source>Ctrl+Wheel zooms the canvas</source>
-        <translation>A Ctrl+Görgő nagyítja a vásznat</translation>
+        <source>Fit to Window</source>
+        <translation>Ablakhoz igazítás</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -634,8 +673,20 @@ Shapes</source>
         <translation>&amp;Súgó</translation>
     </message>
     <message>
+        <source>More tools</source>
+        <translation>További eszközök</translation>
+    </message>
+    <message>
+        <source>More shape tools</source>
+        <translation>További alakzateszközök</translation>
+    </message>
+    <message>
         <source>%s started.</source>
         <translation>%s elindítva.</translation>
+    </message>
+    <message>
+        <source>Retry</source>
+        <translation>Újra</translation>
     </message>
     <message>
         <source>Choose a label to start drawing with it. Press &apos;Esc&apos; to clear the selection.</source>
@@ -666,6 +717,10 @@ Shapes</source>
         <translation>Folytatás az alapértékekkel</translation>
     </message>
     <message>
+        <source>Fit to S&amp;election</source>
+        <translation>&amp;Kijelöléshez igazítás</translation>
+    </message>
+    <message>
         <source>Could not reset the Config File.
 %s</source>
         <translation>Nem sikerült visszaállítani a konfigurációs fájlt.
@@ -674,6 +729,10 @@ Shapes</source>
     <message>
         <source>Configuration backup saved to %s</source>
         <translation>A konfiguráció biztonsági másolata ide lett mentve: %s</translation>
+    </message>
+    <message>
+        <source>Saving…</source>
+        <translation>Mentés…</translation>
     </message>
     <message>
         <source>Mask Output Unavailable</source>
@@ -696,8 +755,16 @@ Váltson az AI Text-to-Annotation modellnél &apos;SAM3 (smart)&apos;-re, vagy �
         <translation>Érvénytelen címke &apos;{}&apos; &apos;{}&apos; validációs típussal</translation>
     </message>
     <message>
-        <source>Error saving label data</source>
-        <translation>Hiba a címke adatok mentésekor</translation>
+        <source>Unlock Shapes</source>
+        <translation>Alakzatok feloldása</translation>
+    </message>
+    <message>
+        <source>Saved</source>
+        <translation>Mentve</translation>
+    </message>
+    <message>
+        <source>Save failed</source>
+        <translation>A mentés sikertelen</translation>
     </message>
     <message>
         <source>&lt;b&gt;%s&lt;/b&gt;</source>
@@ -706,6 +773,14 @@ Váltson az AI Text-to-Annotation modellnél &apos;SAM3 (smart)&apos;-re, vagy �
     <message>
         <source>AI inference failed: %s</source>
         <translation>Az MI-következtetés sikertelen volt: %s</translation>
+    </message>
+    <message>
+        <source>Fit to Selection</source>
+        <translation>Kijelöléshez igazítás</translation>
+    </message>
+    <message>
+        <source>Error saving annotation file</source>
+        <translation>Hiba az annotációs fájl mentésekor</translation>
     </message>
     <message>
         <source>Large image</source>
@@ -748,22 +823,6 @@ Váltson az AI Text-to-Annotation modellnél &apos;SAM3 (smart)&apos;-re, vagy �
         <translation>%s - Kép vagy annotációk megnyitása</translation>
     </message>
     <message>
-        <source>%s - Save/Load Annotations in Directory</source>
-        <translation>%s - Annotációk mentése/betöltése könyvtárból</translation>
-    </message>
-    <message>
-        <source>%s . Annotations will be saved/loaded in %s</source>
-        <translation>%s . Az annotációk a %s könyvtárban lesznek mentve/betöltve</translation>
-    </message>
-    <message>
-        <source>Label files (*%s)</source>
-        <translation>Címke fájlok (*%s)</translation>
-    </message>
-    <message>
-        <source>Choose File</source>
-        <translation>Fájl kiválasztása</translation>
-    </message>
-    <message>
         <source>Attention</source>
         <translation>Figyelem</translation>
     </message>
@@ -786,6 +845,14 @@ Váltson az AI Text-to-Annotation modellnél &apos;SAM3 (smart)&apos;-re, vagy �
     <message>
         <source>Unsaved changes</source>
         <translation>Nem mentett módosítások</translation>
+    </message>
+    <message>
+        <source>The selected annotation file could not be opened: {path}</source>
+        <translation>A kiválasztott annotációs fájl nem nyitható meg: {path}</translation>
+    </message>
+    <message>
+        <source>Annotation Folder not found: %s</source>
+        <translation>Az annotációs mappa nem található: %s</translation>
     </message>
     <message>
         <source>%s - Browse Image Folder</source>
@@ -854,6 +921,14 @@ Please select a different model or use AI-Box mode.</source>
 Kérjük, válasszon másik modellt vagy használja az AI-Box módot.</translation>
     </message>
     <message>
+        <source>%s - Choose Annotation Folder</source>
+        <translation>%s - Annotációs mappa kiválasztása</translation>
+    </message>
+    <message>
+        <source>Annotation Folder: %s</source>
+        <translation>Annotációs mappa: %s</translation>
+    </message>
+    <message>
         <source>Image not found</source>
         <translation>A kép nem található</translation>
     </message>
@@ -866,8 +941,8 @@ Expected location: {path}</source>
 Várt hely: {path}</translation>
     </message>
     <message>
-        <source>File list is disabled when a label file is opened</source>
-        <translation>A fájllista le van tiltva, ha egy címke fájl van megnyitva</translation>
+        <source>Image List is disabled when an annotation file is opened</source>
+        <translation>A képlista le van tiltva, ha egy annotációs fájl van megnyitva</translation>
     </message>
     <message>
         <source>Add Point to Edge</source>
@@ -882,16 +957,8 @@ Várt hely: {path}</translation>
         <translation>&amp;Előző nagyítás megtartása</translation>
     </message>
     <message>
-        <source>Permanently delete this label file? This action cannot be undone.</source>
-        <translation>Véglegesen törli ezt a címke fájlt? Ez a művelet nem vonható vissza.</translation>
-    </message>
-    <message>
         <source>Allowed formats: {formats}</source>
         <translation>Megengedett formátumok: {formats}</translation>
-    </message>
-    <message>
-        <source>The selected label file could not be opened: {path}</source>
-        <translation>A kiválasztott címkefájl nem nyitható meg: {path}</translation>
     </message>
     <message>
         <source>The selected image file could not be opened: {path}</source>
@@ -928,6 +995,22 @@ Várt hely: {path}</translation>
     <message>
         <source>Settings are managed via --config for this session</source>
         <translation>A beállítások ebben a munkamenetben --config segítségével vannak kezelve</translation>
+    </message>
+    <message>
+        <source>Save Annotation File</source>
+        <translation>Annotációs fájl mentése</translation>
+    </message>
+    <message>
+        <source>Annotation files (*%s)</source>
+        <translation>Annotációs fájlok (*%s)</translation>
+    </message>
+    <message>
+        <source>Permanently delete this annotation file? This action cannot be undone.</source>
+        <translation>Véglegesen törli ezt az annotációs fájlt? Ez a művelet nem vonható vissza.</translation>
+    </message>
+    <message>
+        <source>Error deleting annotation file</source>
+        <translation>Hiba az annotációs fájl törlésekor</translation>
     </message>
     <message>
         <source>Configuration Error</source>
@@ -1123,8 +1206,8 @@ Várt hely: {path}</translation>
         <translation>automatikus mentés</translation>
     </message>
     <message>
-        <source>Embeds the image in the label JSON file.</source>
-        <translation>Beágyazza a képet a címke JSON-fájljába.</translation>
+        <source>Embed image in annotation file</source>
+        <translation>Kép beágyazása az annotációs fájlba</translation>
     </message>
     <message>
         <source>Shape Color Mode</source>
@@ -1211,8 +1294,8 @@ Várt hely: {path}</translation>
         <translation>Előre definiált címkék</translation>
     </message>
     <message>
-        <source>Embed image in label file</source>
-        <translation>Kép beágyazása a címkefájlba</translation>
+        <source>Embeds the image in the annotation file.</source>
+        <translation>Beágyazza a képet az annotációs fájlba.</translation>
     </message>
     <message>
         <source>Label validation</source>
@@ -1349,6 +1432,24 @@ Várt hely: {path}</translation>
     <message>
         <source>Predefined image flags</source>
         <translation>Előre definiált képjelzők</translation>
+    </message>
+</context>
+<context>
+    <name>ToolBar</name>
+    <message>
+        <source>More actions</source>
+        <translation>További műveletek</translation>
+    </message>
+</context>
+<context>
+    <name>ZoomWidget</name>
+    <message>
+        <source>Zoom</source>
+        <translation>Nagyítás</translation>
+    </message>
+    <message>
+        <source>Ctrl+Wheel zooms the canvas</source>
+        <translation>A Ctrl+Görgő nagyítja a vásznat</translation>
     </message>
 </context>
 <context>

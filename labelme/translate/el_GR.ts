@@ -92,6 +92,33 @@
     </message>
 </context>
 <context>
+    <name>AnnotationFolderFooter</name>
+    <message>
+        <source>Annotation Folder</source>
+        <translation>Φάκελος σχολιασμών</translation>
+    </message>
+    <message>
+        <source>Next to Images</source>
+        <translation>Δίπλα στις εικόνες</translation>
+    </message>
+    <message>
+        <source>Choose Annotation Folder…</source>
+        <translation>Επιλογή φακέλου σχολιασμών…</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated in</source>
+        <translation>{annotated} από {total} με σχολιασμούς στο</translation>
+    </message>
+    <message>
+        <source>Not found: %s · next to images</source>
+        <translation>Δεν βρέθηκε: %s · δίπλα στις εικόνες</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated · next to images</source>
+        <translation>{annotated} από {total} με σχολιασμούς · δίπλα στις εικόνες</translation>
+    </message>
+</context>
+<context>
     <name>BrightnessContrastDialog</name>
     <message>
         <source>Brightness/Contrast</source>
@@ -173,6 +200,10 @@
         <translation>ALT + Κάντε κλικ για να δημιουργήσετε σημείο στο σχήμα</translation>
     </message>
     <message>
+        <source>Shape is locked</source>
+        <translation>Το σχήμα είναι κλειδωμένο</translation>
+    </message>
+    <message>
         <source>Click &amp; drag to move shape</source>
         <translation>Κάντε κλικ και σύρετε για να μετακινήσετε το σχήμα</translation>
     </message>
@@ -212,16 +243,16 @@
         <translation>Ξεκινήστε την επισήμανση</translation>
     </message>
     <message>
-        <source>Open an image or a directory of images to begin.</source>
+        <source>Open an image or a folder of images to begin.</source>
         <translation>Ανοίξτε μια εικόνα ή έναν φάκελο εικόνων για να ξεκινήσετε.</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Open Image</source>
         <translation>Άνοιγμα εικόνας</translation>
-    </message>
-    <message>
-        <source>Open Directory</source>
-        <translation>Άνοιγμα φακέλου</translation>
     </message>
     <message>
         <source>Or drag and drop image files here</source>
@@ -255,10 +286,6 @@
         <translation>Αποθήκευση</translation>
     </message>
     <message>
-        <source>Save labels to file</source>
-        <translation>Αποθήκευση ετικετών σε αρχείο</translation>
-    </message>
-    <message>
         <source>&amp;Save As</source>
         <translation>Αποθήκευση &amp;Ως</translation>
     </message>
@@ -271,25 +298,9 @@
         <translation>Αυτόματη αποθήκευση</translation>
     </message>
     <message>
-        <source>&amp;Change Output Dir</source>
-        <translation>&amp;Αλλαγή Οδηγίας Εξόδου</translation>
-    </message>
-    <message>
-        <source>Change where annotations are loaded/saved</source>
-        <translation>Αλλαγή του πού φορτώνονται/αποθηκεύονται οι σχολιασμοί</translation>
-    </message>
-    <message>
         <source>&amp;Open
 </source>
         <translation>Ανοιγμα</translation>
-    </message>
-    <message>
-        <source>Open image or label file</source>
-        <translation>Άνοιγμα αρχείου εικόνας ή ετικέτας</translation>
-    </message>
-    <message>
-        <source>Open Dir</source>
-        <translation>Άνοιγμα Dir</translation>
     </message>
     <message>
         <source>&amp;Close</source>
@@ -298,14 +309,6 @@
     <message>
         <source>Close current file</source>
         <translation>Κλείσιμο τρέχοντος αρχείου</translation>
-    </message>
-    <message>
-        <source>&amp;Delete File</source>
-        <translation>&amp; Διαγραφή αρχείου</translation>
-    </message>
-    <message>
-        <source>Delete current label file</source>
-        <translation>Διαγραφή τρέχοντος αρχείου ετικέτας</translation>
     </message>
     <message>
         <source>Keep Previous Annotation</source>
@@ -362,6 +365,14 @@
     <message>
         <source>Merge the selected mask shapes into one</source>
         <translation>Συγχώνευση των επιλεγμένων σχημάτων μάσκας σε ένα</translation>
+    </message>
+    <message>
+        <source>Lock Shapes</source>
+        <translation>Κλείδωμα σχημάτων</translation>
+    </message>
+    <message>
+        <source>Lock the selected shapes against editing, or unlock them</source>
+        <translation>Κλείδωμα των επιλεγμένων σχημάτων έναντι επεξεργασίας ή ξεκλείδωμά τους</translation>
     </message>
     <message>
         <source>Undo last point</source>
@@ -423,6 +434,10 @@
     <message>
         <source>Open prev (hold Ctl+Shift to copy labels)</source>
         <translation>Άνοιγμα προηγούμενου (κρατήστε πατημένο το πλήκτρο Ctl+Shift για να αντιγράψετε τις ετικέτες)</translation>
+    </message>
+    <message>
+        <source>Zoom to the selected shapes whenever the selection changes</source>
+        <translation>Εστίαση στα επιλεγμένα σχήματα κάθε φορά που αλλάζει η επιλογή</translation>
     </message>
     <message>
         <source>&amp;Brightness Contrast</source>
@@ -518,6 +533,54 @@ Shapes</source>
         <translation>Εστίαση</translation>
     </message>
     <message>
+        <source>Fit to Window</source>
+        <translation>Προσαρμογή παραθύρου</translation>
+    </message>
+    <message>
+        <source>Save the annotation file</source>
+        <translation>Αποθήκευση αρχείου επισημειώσεων</translation>
+    </message>
+    <message>
+        <source>Save the annotation file under a new name</source>
+        <translation>Αποθήκευση αρχείου επισημειώσεων με νέο όνομα</translation>
+    </message>
+    <message>
+        <source>Embed Image in Annotation File</source>
+        <translation>Ενσωμάτωση εικόνας στο αρχείο επισημειώσεων</translation>
+    </message>
+    <message>
+        <source>Store a copy of the image inside the annotation file</source>
+        <translation>Αποθηκεύει ένα αντίγραφο της εικόνας μέσα στο αρχείο επισημειώσεων</translation>
+    </message>
+    <message>
+        <source>Change &amp;Annotation Folder…</source>
+        <translation>Αλλαγή φακέλου &amp;σχολιασμών…</translation>
+    </message>
+    <message>
+        <source>Choose where annotation files are read and saved</source>
+        <translation>Επιλογή του πού διαβάζονται και αποθηκεύονται τα αρχεία σχολιασμών</translation>
+    </message>
+    <message>
+        <source>Open an image or annotation file</source>
+        <translation>Άνοιγμα εικόνας ή αρχείου επισημειώσεων</translation>
+    </message>
+    <message>
+        <source>Open Folder…</source>
+        <translation>Άνοιγμα φακέλου…</translation>
+    </message>
+    <message>
+        <source>Open a folder of images</source>
+        <translation>Άνοιγμα φακέλου εικόνων</translation>
+    </message>
+    <message>
+        <source>&amp;Delete Annotation File</source>
+        <translation>&amp;Διαγραφή αρχείου επισημειώσεων</translation>
+    </message>
+    <message>
+        <source>Delete the current annotation file</source>
+        <translation>Διαγραφή τρέχοντος αρχείου επισημειώσεων</translation>
+    </message>
+    <message>
         <source>&amp;Quit</source>
         <translation>Τερματισμός</translation>
     </message>
@@ -550,8 +613,20 @@ Shapes</source>
         <translation>Βοήθεια</translation>
     </message>
     <message>
+        <source>More tools</source>
+        <translation>Περισσότερα εργαλεία</translation>
+    </message>
+    <message>
+        <source>More shape tools</source>
+        <translation>Περισσότερα εργαλεία σχημάτων</translation>
+    </message>
+    <message>
         <source>%s started.</source>
         <translation>%s ξεκίνησε.</translation>
+    </message>
+    <message>
+        <source>Retry</source>
+        <translation>Επανάληψη</translation>
     </message>
     <message>
         <source>Flags</source>
@@ -574,12 +649,16 @@ Shapes</source>
         <translation>Μη έγκυρη κανονική έκφραση. Διατηρείται η προηγούμενη αναζήτηση.</translation>
     </message>
     <message>
-        <source>File List</source>
-        <translation>Λίστα αρχείων</translation>
+        <source>Image List</source>
+        <translation>Λίστα εικόνων</translation>
     </message>
     <message>
         <source>Command-line settings</source>
         <translation>Ρυθμίσεις γραμμής εντολών</translation>
+    </message>
+    <message>
+        <source>Saving…</source>
+        <translation>Αποθήκευση…</translation>
     </message>
     <message>
         <source>Mask Output Unavailable</source>
@@ -602,8 +681,16 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>Μη έγκυρη ετικέτα &apos;{}&apos; με τύπο επικύρωσης &apos;{}&apos;</translation>
     </message>
     <message>
-        <source>Error saving label data</source>
-        <translation>Σφάλμα κατά την αποθήκευση δεδομένων ετικέτας</translation>
+        <source>Unlock Shapes</source>
+        <translation>Ξεκλείδωμα σχημάτων</translation>
+    </message>
+    <message>
+        <source>Saved</source>
+        <translation>Αποθηκεύτηκε</translation>
+    </message>
+    <message>
+        <source>Save failed</source>
+        <translation>Η αποθήκευση απέτυχε</translation>
     </message>
     <message>
         <source>&lt;b&gt;%s&lt;/b&gt;</source>
@@ -612,6 +699,14 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
     <message>
         <source>AI inference failed: %s</source>
         <translation>Η συμπερασματική επεξεργασία ΤΝ απέτυχε: %s</translation>
+    </message>
+    <message>
+        <source>Fit to Selection</source>
+        <translation>Προσαρμογή στην επιλογή</translation>
+    </message>
+    <message>
+        <source>Error saving annotation file</source>
+        <translation>Σφάλμα αποθήκευσης αρχείου επισημειώσεων</translation>
     </message>
     <message>
         <source>Large image</source>
@@ -654,22 +749,6 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>%s - Άνοιγμα εικόνας ή επισημειώσεων</translation>
     </message>
     <message>
-        <source>%s - Save/Load Annotations in Directory</source>
-        <translation>%s - Αποθήκευση/Φόρτωση σχολιασμών στον κατάλογο</translation>
-    </message>
-    <message>
-        <source>%s . Annotations will be saved/loaded in %s</source>
-        <translation>%s . Οι σχολιασμοί θα αποθηκεύονται/φορτώνονται στο %s</translation>
-    </message>
-    <message>
-        <source>Label files (*%s)</source>
-        <translation>Αρχεία ετικετών (*%s)</translation>
-    </message>
-    <message>
-        <source>Choose File</source>
-        <translation>Επιλογή αρχείου</translation>
-    </message>
-    <message>
         <source>Attention</source>
         <translation>Προσοχή</translation>
     </message>
@@ -694,6 +773,14 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>Μη αποθηκευμένες αλλαγές</translation>
     </message>
     <message>
+        <source>The selected annotation file could not be opened: {path}</source>
+        <translation>Δεν ήταν δυνατό το άνοιγμα του επιλεγμένου αρχείου επισημειώσεων: {path}</translation>
+    </message>
+    <message>
+        <source>Annotation Folder not found: %s</source>
+        <translation>Ο φάκελος σχολιασμών δεν βρέθηκε: %s</translation>
+    </message>
+    <message>
         <source>%s - Browse Image Folder</source>
         <translation>%s - Επιλογή φακέλου εικόνων</translation>
     </message>
@@ -708,18 +795,6 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
     <message>
         <source>Polygon</source>
         <translation>Πολύγωνο</translation>
-    </message>
-    <message>
-        <source>Save the labels under a new file name</source>
-        <translation>Αποθήκευση των ετικετών με νέο όνομα αρχείου</translation>
-    </message>
-    <message>
-        <source>Embed Image in Label File</source>
-        <translation>Ενσωμάτωση εικόνας στο αρχείο ετικέτας</translation>
-    </message>
-    <message>
-        <source>Store a copy of the image inside the label file</source>
-        <translation>Αποθηκεύει ένα αντίγραφο της εικόνας μέσα στο αρχείο ετικέτας</translation>
     </message>
     <message>
         <source>Insert the clipboard shapes into this image</source>
@@ -782,12 +857,8 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>Διατήρηση ολόκληρης της εικόνας ορατής όταν αλλάζει το μέγεθος του παραθύρου</translation>
     </message>
     <message>
-        <source>Fit to Wi&amp;dth</source>
-        <translation>Προσαρμογή στο &amp; πλάτος</translation>
-    </message>
-    <message>
-        <source>Match the image width to the window when it is resized</source>
-        <translation>Ταίριασμα του πλάτους της εικόνας με το παράθυρο όταν αλλάζει το μέγεθός του</translation>
+        <source>Fit to S&amp;election</source>
+        <translation>Προσαρμογή στην &amp;επιλογή</translation>
     </message>
     <message>
         <source>Make the image appear larger</source>
@@ -804,10 +875,6 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
     <message>
         <source>Show the image at 100%</source>
         <translation>Εμφάνιση της εικόνας στο 100%</translation>
-    </message>
-    <message>
-        <source>Ctrl+Wheel zooms the canvas</source>
-        <translation>Ctrl+Ροδέλα κάνει ζουμ στον καμβά</translation>
     </message>
     <message>
         <source>Choose a label to start drawing with it. Press &apos;Esc&apos; to clear the selection.</source>
@@ -862,8 +929,8 @@ Expected location: {path}</source>
 Αναμενόμενη τοποθεσία: {path}</translation>
     </message>
     <message>
-        <source>File list is disabled when a label file is opened</source>
-        <translation>Η λίστα αρχείων είναι απενεργοποιημένη όταν ανοίγεται ένα αρχείο ετικετών</translation>
+        <source>Image List is disabled when an annotation file is opened</source>
+        <translation>Η λίστα εικόνων είναι απενεργοποιημένη όταν ανοίγεται ένα αρχείο επισημειώσεων</translation>
     </message>
     <message>
         <source>Add Point to Edge</source>
@@ -878,16 +945,8 @@ Expected location: {path}</source>
         <translation>&amp;Διατήρηση προηγούμενου ζουμ</translation>
     </message>
     <message>
-        <source>Permanently delete this label file? This action cannot be undone.</source>
-        <translation>Οριστική διαγραφή αυτού του αρχείου ετικετών; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</translation>
-    </message>
-    <message>
         <source>Allowed formats: {formats}</source>
         <translation>Επιτρεπόμενες μορφές: {formats}</translation>
-    </message>
-    <message>
-        <source>The selected label file could not be opened: {path}</source>
-        <translation>Δεν ήταν δυνατό το άνοιγμα του επιλεγμένου αρχείου ετικετών: {path}</translation>
     </message>
     <message>
         <source>The selected image file could not be opened: {path}</source>
@@ -924,6 +983,30 @@ Expected location: {path}</source>
     <message>
         <source>Settings are managed via --config for this session</source>
         <translation>Οι ρυθμίσεις διαχειρίζονται μέσω --config για αυτή την περίοδο λειτουργίας</translation>
+    </message>
+    <message>
+        <source>%s - Choose Annotation Folder</source>
+        <translation>%s - Επιλογή φακέλου σχολιασμών</translation>
+    </message>
+    <message>
+        <source>Annotation Folder: %s</source>
+        <translation>Φάκελος σχολιασμών: %s</translation>
+    </message>
+    <message>
+        <source>Save Annotation File</source>
+        <translation>Αποθήκευση αρχείου επισημειώσεων</translation>
+    </message>
+    <message>
+        <source>Annotation files (*%s)</source>
+        <translation>Αρχεία επισημειώσεων (*%s)</translation>
+    </message>
+    <message>
+        <source>Permanently delete this annotation file? This action cannot be undone.</source>
+        <translation>Οριστική διαγραφή αυτού του αρχείου επισημειώσεων; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.</translation>
+    </message>
+    <message>
+        <source>Error deleting annotation file</source>
+        <translation>Σφάλμα διαγραφής αρχείου επισημειώσεων</translation>
     </message>
     <message>
         <source>Configuration Error</source>
@@ -1119,8 +1202,8 @@ Expected location: {path}</source>
         <translation>αυτόματη αποθήκευση</translation>
     </message>
     <message>
-        <source>Embeds the image in the label JSON file.</source>
-        <translation>Ενσωματώνει την εικόνα στο αρχείο JSON της ετικέτας.</translation>
+        <source>Embed image in annotation file</source>
+        <translation>Ενσωμάτωση εικόνας στο αρχείο επισημειώσεων</translation>
     </message>
     <message>
         <source>Shape Color Mode</source>
@@ -1207,8 +1290,8 @@ Expected location: {path}</source>
         <translation>Προκαθορισμένες ετικέτες</translation>
     </message>
     <message>
-        <source>Embed image in label file</source>
-        <translation>Ενσωμάτωση εικόνας στο αρχείο ετικέτας</translation>
+        <source>Embeds the image in the annotation file.</source>
+        <translation>Ενσωματώνει την εικόνα στο αρχείο επισημειώσεων.</translation>
     </message>
     <message>
         <source>Label validation</source>
@@ -1345,6 +1428,24 @@ Expected location: {path}</source>
     <message>
         <source>Predefined image flags</source>
         <translation>Προκαθορισμένες σημαίες εικόνας</translation>
+    </message>
+</context>
+<context>
+    <name>ToolBar</name>
+    <message>
+        <source>More actions</source>
+        <translation>Περισσότερες ενέργειες</translation>
+    </message>
+</context>
+<context>
+    <name>ZoomWidget</name>
+    <message>
+        <source>Zoom</source>
+        <translation>Εστίαση</translation>
+    </message>
+    <message>
+        <source>Ctrl+Wheel zooms the canvas</source>
+        <translation>Ctrl+Ροδέλα κάνει ζουμ στον καμβά</translation>
     </message>
 </context>
 <context>

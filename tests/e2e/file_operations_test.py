@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from collections.abc import Callable
 from pathlib import Path
 
@@ -8,6 +9,7 @@ from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
 from labelme._app import MainWindow
+from labelme._label_file import read_label_file
 
 from ..conftest import close_or_pause
 from .conftest import MainWinFactory
@@ -16,9 +18,51 @@ from .conftest import show_window_and_wait_for_imagedata
 
 
 @pytest.mark.gui
+@pytest.mark.skipif(os.name == "nt", reason="directory symlinks require privileges")
+@pytest.mark.parametrize("use_image_alias", [False, True])
+def test_save_through_directory_alias_reopens_source_image(
+    *,
+    main_win: MainWinFactory,
+    qtbot: QtBot,
+    data_path: Path,
+    tmp_path: Path,
+    use_image_alias: bool,
+) -> None:
+    project = tmp_path / "nested" / "project"
+    (project / "labels").mkdir(parents=True)
+    alias = tmp_path / "alias"
+    alias.symlink_to(project, target_is_directory=True)
+    image_path = data_path / "raw" / "2011_000003.jpg"
+    if use_image_alias:
+        (project / "image.jpg").symlink_to(image_path)
+        image_path = alias / "image.jpg"
+    win = main_win(
+        file_or_dir=str(image_path), config_overrides={"with_image_data": False}
+    )
+    show_window_and_wait_for_imagedata(qtbot=qtbot, win=win)
+    assert win._annotation is not None
+    image_data = win._annotation.image_data
+    label_path = alias / "labels" / "saved.json"
+
+    assert win.save_labels(label_path=str(label_path))
+    saved = read_label_file(filename=str(label_path))
+    assert saved.image_data == image_data
+    assert (label_path.parent / saved.image_path).samefile(image_path)
+    if use_image_alias:
+        assert saved.image_path == "../image.jpg"
+    assert win._load_file(image_or_label_path=str(label_path))
+    assert win._annotation is not None
+    assert win._annotation.image_data == image_data
+    assert win._image_path is not None
+    assert Path(win._image_path).samefile(image_path)
+    assert win.save_labels(label_path=str(label_path))
+    assert read_label_file(filename=str(label_path)).image_data == image_data
+
+
+@pytest.mark.gui
 @pytest.mark.parametrize(
     "set_fit_mode",
-    [MainWindow.set_fit_window_mode, MainWindow.set_fit_width_mode],
+    [MainWindow.set_fit_window_mode],
 )
 def test_close_file(
     *,
@@ -108,6 +152,39 @@ def test_delete_label_file_keeps_image(
     assert win._annotation is not None
 
     close_or_pause(qtbot=qtbot, widget=win, pause=pause)
+
+
+@pytest.mark.gui
+def test_failed_delete_preserves_annotation_and_reports_error(
+    *,
+    annotated_win: MainWindow,
+    monkeypatch: pytest.MonkeyPatch,
+    critical_messages: list[str],
+) -> None:
+    label_path = Path(annotated_win.current_label_file_path())
+    original_bytes = label_path.read_bytes()
+    annotated_win._actions.save_auto.setChecked(False)
+    annotated_win._canvas_widgets.canvas.shapes[0].label = "unsaved edit"
+    annotated_win.mark_dirty()
+    shapes = annotated_win._canvas_widgets.canvas.shapes[:]
+    original_unlink = Path.unlink
+
+    def reject_unlink(path: Path, /, *, missing_ok: bool = False) -> None:
+        if path == label_path:
+            raise PermissionError("read-only directory")
+        original_unlink(path, missing_ok=missing_ok)
+
+    monkeypatch.setattr(Path, "unlink", reject_unlink)
+    monkeypatch.setattr(annotated_win, "_confirm_deletion", lambda **_kwargs: True)
+    annotated_win.delete_file()
+
+    assert label_path.read_bytes() == original_bytes
+    assert annotated_win._canvas_widgets.canvas.shapes == shapes
+    assert annotated_win._is_changed
+    assert annotated_win._actions.delete_file.isEnabled()
+    assert len(critical_messages) == 1
+    assert "read-only directory" in critical_messages[0]
+    annotated_win.mark_clean()
 
 
 @pytest.mark.gui

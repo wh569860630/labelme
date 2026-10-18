@@ -30,6 +30,10 @@ _Avoid_: class, category, tag, name; also avoid "label" to mean the Annotation F
 The on-disk persisted form of one Annotation, stored as JSON. There is one Annotation File per Image. Identified in code as `LabelFile` / `LabelData` for historical reasons — that legacy name is not promoted as glossary vocabulary.
 _Avoid_: label file, JSON file (when more precision is helpful), annotation json.
 
+**Annotation Folder**:
+The folder where Labelme reads and writes Annotation Files instead of next to each Image. Optional and unset by default, so each Annotation File sits next to its Image. When it is set, Labelme does not fall back to an Annotation File next to the Image. Set it with `--output` or Change Annotation Folder…. Labelme remembers it per opened folder in the Window State and restores it when that folder, or an Image in it, is opened again; `--output` replaces the remembered folder for the folder it is given with. Choosing one needs an opened folder. A remembered folder that no longer exists is skipped with a status-bar notice and kept for when it returns. Save As can still write the current Image's Annotation File elsewhere.
+_Avoid_: output dir, save dir, label folder, annotations dir.
+
 **Group**:
 A set of Shapes sharing a common `group_id`, marking them as belonging together. The reason for grouping is application-defined — instance segmentation uses it for the visible parts of one occluded object, but the concept is general and not tied to any one use case.
 _Avoid_: instance (it is only one application of grouping), cluster.
@@ -86,9 +90,13 @@ _Avoid_: bitmap, raster, segmentation map (when you mean just this Shape's pixel
 An input image file (PNG, JPEG, TIFF, etc.) that is the subject of an Annotation. Identified by its path on disk. The in-memory pixel array used while annotating is an implementation concern and not part of this term.
 _Avoid_: photo, picture, file, frame.
 
+**Image List**:
+The dock listing the Images in this session. Opening a folder lists every Image under it, recursively; opening a single Image lists every Image under its parent folder the same way; opening an Annotation File directly empties and disables the list. A row's check mark means only that its Image has an Annotation File; users cannot toggle it. The dock keeps its legacy `file_dock` config key and `Files` object name, so saved layouts and Config Files still apply.
+_Avoid_: file list.
+
 **Label List**:
-The predefined set of allowed Label strings configured for an annotation session (via the `--labels` CLI flag, a labels file, or the user config). The Label List is the *permitted vocabulary*; it is not the same as the Labels that actually appear on Shapes.
-_Avoid_: labels (means actual labels in use), label vocabulary (verbose), classes.
+The dock listing the Labels in this session: the configured Labels (from the `--labels` CLI flag, a labels file, or the Config File) plus every Label used on a Shape since launch. It is append-only: a Label stays after its last Shape is deleted, so it is not the set of Labels on the current Image's Shapes. Label validation (`validate_label`) checks a new Label against it.
+_Avoid_: labels (means the Labels on Shapes), label vocabulary (verbose), classes.
 
 ### Configuration
 

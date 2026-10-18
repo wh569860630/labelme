@@ -8,6 +8,7 @@ from typing import Final
 from unittest.mock import Mock
 
 import numpy as np
+import osam
 import pytest
 from PySide6 import QtCore
 from PySide6 import QtGui
@@ -1401,6 +1402,59 @@ def test_load_pixmap_rearms_inference_failure_report(*, canvas: Canvas) -> None:
 
 
 @pytest.mark.gui
+def test_load_pixmap_defers_image_hash(
+    *, canvas: Canvas, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pixmap = QtGui.QPixmap(_WIDTH, _HEIGHT)
+    monkeypatch.setattr(
+        pixmap, "toImage", Mock(side_effect=AssertionError("Image converted on load"))
+    )
+    canvas._pixmap_hash = 1
+    canvas.load_pixmap(pixmap=pixmap)
+    assert canvas._pixmap_hash is None
+
+
+@pytest.mark.gui
+@pytest.mark.parametrize("change", ["pixels", "dimensions"])
+def test_ai_embedding_is_reused_after_reloading_image(
+    *, canvas: Canvas, monkeypatch: pytest.MonkeyPatch, change: str
+) -> None:
+    model = Mock()
+    model.name = "fake-model"
+    model.encode_image.return_value = osam.types.ImageEmbedding(
+        original_height=_HEIGHT,
+        original_width=_WIDTH,
+        embedding=np.zeros((1, 1, 1), dtype=np.float32),
+    )
+    model.generate.return_value = osam.types.GenerateResponse(
+        model=model.name, annotations=[]
+    )
+    monkeypatch.setattr(
+        canvas._ai_assist_session._get_session(), "_get_or_load_model", lambda: model
+    )
+    first = QtGui.QImage(_WIDTH, _HEIGHT, QtGui.QImage.Format.Format_RGB32)
+    first.fill(Qt.GlobalColor.red)
+    second = QtGui.QImage(
+        _WIDTH if change == "pixels" else _HEIGHT,
+        _HEIGHT if change == "pixels" else _WIDTH,
+        QtGui.QImage.Format.Format_RGB32,
+    )
+    second.fill(Qt.GlobalColor.blue if change == "pixels" else Qt.GlobalColor.red)
+    keys: list[int] = []
+    for image, expected_encode_calls in [(first, 1), (second, 2), (first, 2)]:
+        # Fresh image data, as file navigation creates, rather than a shared pixmap.
+        pixmap = QtGui.QPixmap.fromImage(image.copy())
+        keys.append(pixmap.cacheKey())
+        canvas.reset_state()
+        canvas.load_pixmap(pixmap=pixmap)
+        canvas._propose_ai_shapes(
+            prompt_kind="points", points=[QPointF(10, 10)], point_labels=[1]
+        )
+        assert model.encode_image.call_count == expected_encode_calls
+    assert len(set(keys)) == 3
+
+
+@pytest.mark.gui
 def test_create_mode_switch_retypes_one_point_partial(*, canvas: Canvas) -> None:
     # Retype must update _current.shape_type and _line.shape_type, but must
     # NOT re-seed _line.points (which would alias both slots and break the
@@ -2658,3 +2712,130 @@ def test_hover_transitions_repaint(
         painted.clear()
         canvas.set_editing(value=True)
         qtbot.waitUntil(lambda: bool(painted))
+
+
+def _double_click_canvas(
+    *,
+    qtbot: QtBot,
+    canvas: Canvas,
+    image_pos: QPointF,
+    button: Qt.MouseButton,
+) -> None:
+    # A real double-click arrives as press, release, double-click, release.
+    pos = canvas.transform_image_point_to_widget(image_pos).toPoint()
+    qtbot.mouseMove(canvas, pos)
+    qtbot.mouseClick(canvas, button, pos=pos)
+    qtbot.mouseDClick(canvas, button, pos=pos)
+    qtbot.mouseRelease(canvas, button, pos=pos)
+
+
+@pytest.fixture()
+def editing_canvas(*, qtbot: QtBot, canvas: Canvas) -> Canvas:
+    # Hovering needs mouse-move events, which only a shown widget receives.
+    with qtbot.waitExposed(canvas):
+        canvas.show()
+    canvas.load_shapes(shapes=[_make_polygon()])
+    # The main window owns the selection and writes it back like this.
+    canvas.selection_changed.connect(
+        lambda shapes: setattr(canvas, "selected_shapes", shapes)
+    )
+    return canvas
+
+
+@pytest.mark.gui
+@pytest.mark.parametrize(
+    "image_pos",
+    [
+        pytest.param(QPointF(20.0, 20.0), id="inside"),
+        # Just outside the outline, so only the hovered vertex finds the shape.
+        pytest.param(QPointF(9.0, 9.0), id="vertex"),
+    ],
+)
+@pytest.mark.parametrize("is_selected", [False, True])
+def test_double_click_shape_selects_it_and_emits_signal(
+    *, qtbot: QtBot, editing_canvas: Canvas, image_pos: QPointF, is_selected: bool
+) -> None:
+    canvas = editing_canvas
+    shape = canvas.shapes[0]
+    if is_selected:
+        canvas.select_shapes(shapes=[shape])
+    emitted = Mock()
+    canvas.shape_double_clicked.connect(emitted)
+
+    _double_click_canvas(
+        qtbot=qtbot,
+        canvas=canvas,
+        image_pos=image_pos,
+        button=Qt.MouseButton.LeftButton,
+    )
+
+    emitted.assert_called_once_with()
+    assert canvas.selected_shapes == [shape]
+
+
+@pytest.mark.gui
+def test_double_click_vertex_selects_its_shape_not_the_enclosing_one(
+    *, qtbot: QtBot, editing_canvas: Canvas
+) -> None:
+    canvas = editing_canvas
+    inner = _make_polygon()
+    outer = Shape(
+        shape_type="rectangle",
+        points=np.array([(0, 0), (50, 50)], dtype=np.float64),
+        closed=True,
+    )
+    canvas.load_shapes(shapes=[inner, outer])
+
+    _double_click_canvas(
+        qtbot=qtbot,
+        canvas=canvas,
+        image_pos=QPointF(10.0, 10.0),
+        button=Qt.MouseButton.LeftButton,
+    )
+
+    assert canvas.selected_shapes == [inner]
+
+
+@pytest.mark.gui
+@pytest.mark.parametrize(
+    ("image_pos", "button"),
+    [
+        pytest.param(QPointF(80.0, 40.0), Qt.MouseButton.LeftButton, id="empty"),
+        pytest.param(QPointF(20.0, 20.0), Qt.MouseButton.MiddleButton, id="middle"),
+    ],
+)
+def test_double_click_does_not_emit_signal(
+    *,
+    qtbot: QtBot,
+    editing_canvas: Canvas,
+    image_pos: QPointF,
+    button: Qt.MouseButton,
+) -> None:
+    canvas = editing_canvas
+    emitted = Mock()
+    canvas.shape_double_clicked.connect(emitted)
+
+    _double_click_canvas(qtbot=qtbot, canvas=canvas, image_pos=image_pos, button=button)
+
+    emitted.assert_not_called()
+
+
+@pytest.mark.gui
+def test_double_click_in_create_mode_finalizes_shape(
+    *, qtbot: QtBot, canvas: Canvas
+) -> None:
+    canvas.set_editing(value=False)
+    canvas.create_mode = "polygon"
+    canvas._current = _DraftShape(
+        points=(QPointF(10.0, 10.0), QPointF(30.0, 10.0), QPointF(20.0, 30.0)),
+        point_labels=(1, 1, 1),
+    )
+    emitted = Mock()
+    canvas.shape_double_clicked.connect(emitted)
+
+    pos = canvas.transform_image_point_to_widget(QPointF(20.0, 30.0)).toPoint()
+    qtbot.mouseDClick(canvas, Qt.MouseButton.LeftButton, pos=pos)
+
+    emitted.assert_not_called()
+    assert canvas._current is None
+    assert len(canvas.shapes) == 1

@@ -92,6 +92,33 @@
     </message>
 </context>
 <context>
+    <name>AnnotationFolderFooter</name>
+    <message>
+        <source>Annotation Folder</source>
+        <translation>Папка анотацій</translation>
+    </message>
+    <message>
+        <source>Next to Images</source>
+        <translation>Поруч із зображеннями</translation>
+    </message>
+    <message>
+        <source>Choose Annotation Folder…</source>
+        <translation>Вибрати папку анотацій…</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated in</source>
+        <translation>{annotated} з {total} з анотаціями в</translation>
+    </message>
+    <message>
+        <source>Not found: %s · next to images</source>
+        <translation>Не знайдено: %s · поруч із зображеннями</translation>
+    </message>
+    <message>
+        <source>{annotated} of {total} annotated · next to images</source>
+        <translation>{annotated} з {total} з анотаціями · поруч із зображеннями</translation>
+    </message>
+</context>
+<context>
     <name>BrightnessContrastDialog</name>
     <message>
         <source>Brightness/Contrast</source>
@@ -173,6 +200,10 @@
         <translation>ALT + Натисніть, щоб створити точку на фігурі</translation>
     </message>
     <message>
+        <source>Shape is locked</source>
+        <translation>Фігуру заблоковано</translation>
+    </message>
+    <message>
         <source>Click &amp; drag to move shape</source>
         <translation>Натисніть і перетягніть, щоб перемістити фігуру</translation>
     </message>
@@ -212,16 +243,16 @@
         <translation>Почати анотування</translation>
     </message>
     <message>
-        <source>Open an image or a directory of images to begin.</source>
+        <source>Open an image or a folder of images to begin.</source>
         <translation>Щоб почати, відкрийте зображення або папку із зображеннями.</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Відкрити папку</translation>
     </message>
     <message>
         <source>Open Image</source>
         <translation>Відкрити зображення</translation>
-    </message>
-    <message>
-        <source>Open Directory</source>
-        <translation>Відкрити папку</translation>
     </message>
     <message>
         <source>Or drag and drop image files here</source>
@@ -255,10 +286,6 @@
         <translation>&amp;Зберегти</translation>
     </message>
     <message>
-        <source>Save labels to file</source>
-        <translation>Зберегти мітки у файл</translation>
-    </message>
-    <message>
         <source>&amp;Save As</source>
         <translation>&amp;Зберегти як</translation>
     </message>
@@ -271,25 +298,9 @@
         <translation>Зберегти автоматично</translation>
     </message>
     <message>
-        <source>&amp;Change Output Dir</source>
-        <translation>&amp;Змінити каталог виводу</translation>
-    </message>
-    <message>
-        <source>Change where annotations are loaded/saved</source>
-        <translation>Змінити місце завантаження/збереження анотацій</translation>
-    </message>
-    <message>
         <source>&amp;Open
 </source>
         <translation>&amp;Відкрити</translation>
-    </message>
-    <message>
-        <source>Open image or label file</source>
-        <translation>Відкрити файл зображення або мітки</translation>
-    </message>
-    <message>
-        <source>Open Dir</source>
-        <translation>Відкрити каталог</translation>
     </message>
     <message>
         <source>&amp;Close</source>
@@ -298,14 +309,6 @@
     <message>
         <source>Close current file</source>
         <translation>Закрити поточний файл</translation>
-    </message>
-    <message>
-        <source>&amp;Delete File</source>
-        <translation>&amp;Видалити файл</translation>
-    </message>
-    <message>
-        <source>Delete current label file</source>
-        <translation>Видалити поточний файл мітки</translation>
     </message>
     <message>
         <source>Keep Previous Annotation</source>
@@ -362,6 +365,14 @@
     <message>
         <source>Merge the selected mask shapes into one</source>
         <translation>Об&apos;єднати вибрані фігури-маски в одну</translation>
+    </message>
+    <message>
+        <source>Lock Shapes</source>
+        <translation>Заблокувати фігури</translation>
+    </message>
+    <message>
+        <source>Lock the selected shapes against editing, or unlock them</source>
+        <translation>Заблокувати вибрані фігури від редагування або розблокувати їх</translation>
     </message>
     <message>
         <source>Undo last point</source>
@@ -423,6 +434,10 @@
     <message>
         <source>Open prev (hold Ctl+Shift to copy labels)</source>
         <translation>Відкрити попередній (утримуйте Ctrl+Shift, щоб скопіювати мітки)</translation>
+    </message>
+    <message>
+        <source>Zoom to the selected shapes whenever the selection changes</source>
+        <translation>Масштабувати за вибраними фігурами під час кожної зміни виділення</translation>
     </message>
     <message>
         <source>&amp;Brightness Contrast</source>
@@ -519,6 +534,54 @@ Shapes</source>
         <translation>Збільшити</translation>
     </message>
     <message>
+        <source>Fit to Window</source>
+        <translation>Припасувати вікно</translation>
+    </message>
+    <message>
+        <source>Save the annotation file</source>
+        <translation>Зберегти файл анотацій</translation>
+    </message>
+    <message>
+        <source>Save the annotation file under a new name</source>
+        <translation>Зберегти файл анотацій під новою назвою</translation>
+    </message>
+    <message>
+        <source>Embed Image in Annotation File</source>
+        <translation>Вбудувати зображення у файл анотацій</translation>
+    </message>
+    <message>
+        <source>Store a copy of the image inside the annotation file</source>
+        <translation>Зберігає копію зображення всередині файлу анотацій</translation>
+    </message>
+    <message>
+        <source>Change &amp;Annotation Folder…</source>
+        <translation>Змінити папку &amp;анотацій…</translation>
+    </message>
+    <message>
+        <source>Choose where annotation files are read and saved</source>
+        <translation>Вибрати, де читати й зберігати файли анотацій</translation>
+    </message>
+    <message>
+        <source>Open an image or annotation file</source>
+        <translation>Відкрити зображення або файл анотацій</translation>
+    </message>
+    <message>
+        <source>Open Folder…</source>
+        <translation>Відкрити папку…</translation>
+    </message>
+    <message>
+        <source>Open a folder of images</source>
+        <translation>Відкрити папку із зображеннями</translation>
+    </message>
+    <message>
+        <source>&amp;Delete Annotation File</source>
+        <translation>&amp;Видалити файл анотацій</translation>
+    </message>
+    <message>
+        <source>Delete the current annotation file</source>
+        <translation>Видалити поточний файл анотацій</translation>
+    </message>
+    <message>
         <source>&amp;Quit</source>
         <translation>&amp;Вийти</translation>
     </message>
@@ -551,8 +614,20 @@ Shapes</source>
         <translation>&amp;Довідка</translation>
     </message>
     <message>
+        <source>More tools</source>
+        <translation>Інші інструменти</translation>
+    </message>
+    <message>
+        <source>More shape tools</source>
+        <translation>Інші інструменти фігур</translation>
+    </message>
+    <message>
         <source>%s started.</source>
         <translation>%s розпочато.</translation>
+    </message>
+    <message>
+        <source>Retry</source>
+        <translation>Повторити</translation>
     </message>
     <message>
         <source>Flags</source>
@@ -575,12 +650,16 @@ Shapes</source>
         <translation>Некоректний регулярний вираз. Збережено попередній пошук.</translation>
     </message>
     <message>
-        <source>File List</source>
-        <translation>Список файлів</translation>
+        <source>Image List</source>
+        <translation>Список зображень</translation>
     </message>
     <message>
         <source>Command-line settings</source>
         <translation>Налаштування командного рядка</translation>
+    </message>
+    <message>
+        <source>Saving…</source>
+        <translation>Збереження…</translation>
     </message>
     <message>
         <source>Mask Output Unavailable</source>
@@ -603,8 +682,16 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>Недійсна мітка &quot;{}&quot; з типом перевірки &quot;{}&quot;</translation>
     </message>
     <message>
-        <source>Error saving label data</source>
-        <translation>Помилка збереження даних мітки</translation>
+        <source>Unlock Shapes</source>
+        <translation>Розблокувати фігури</translation>
+    </message>
+    <message>
+        <source>Saved</source>
+        <translation>Збережено</translation>
+    </message>
+    <message>
+        <source>Save failed</source>
+        <translation>Не вдалося зберегти</translation>
     </message>
     <message>
         <source>&lt;b&gt;%s&lt;/b&gt;</source>
@@ -613,6 +700,14 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
     <message>
         <source>AI inference failed: %s</source>
         <translation>Інференс ШІ не вдався: %s</translation>
+    </message>
+    <message>
+        <source>Fit to Selection</source>
+        <translation>За виділенням</translation>
+    </message>
+    <message>
+        <source>Error saving annotation file</source>
+        <translation>Помилка збереження файлу анотацій</translation>
     </message>
     <message>
         <source>Large image</source>
@@ -655,22 +750,6 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>%s - Відкрити зображення або анотації</translation>
     </message>
     <message>
-        <source>%s - Save/Load Annotations in Directory</source>
-        <translation>%s - Зберегти/завантажити анотації в каталозі</translation>
-    </message>
-    <message>
-        <source>%s . Annotations will be saved/loaded in %s</source>
-        <translation>%s . Анотації будуть збережені/завантажені в %s</translation>
-    </message>
-    <message>
-        <source>Label files (*%s)</source>
-        <translation>Файли міток (*%s)</translation>
-    </message>
-    <message>
-        <source>Choose File</source>
-        <translation>Виберіть файл</translation>
-    </message>
-    <message>
         <source>Attention</source>
         <translation>Увага</translation>
     </message>
@@ -695,6 +774,14 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>Незбережені зміни</translation>
     </message>
     <message>
+        <source>The selected annotation file could not be opened: {path}</source>
+        <translation>Не вдалося відкрити вибраний файл анотацій: {path}</translation>
+    </message>
+    <message>
+        <source>Annotation Folder not found: %s</source>
+        <translation>Папку анотацій не знайдено: %s</translation>
+    </message>
+    <message>
         <source>%s - Browse Image Folder</source>
         <translation>%s - Вибрати теку зображень</translation>
     </message>
@@ -709,18 +796,6 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
     <message>
         <source>Polygon</source>
         <translation>Багатокутник</translation>
-    </message>
-    <message>
-        <source>Save the labels under a new file name</source>
-        <translation>Зберегти мітки під новою назвою файлу</translation>
-    </message>
-    <message>
-        <source>Embed Image in Label File</source>
-        <translation>Вбудувати зображення у файл мітки</translation>
-    </message>
-    <message>
-        <source>Store a copy of the image inside the label file</source>
-        <translation>Зберігає копію зображення всередині файлу мітки</translation>
     </message>
     <message>
         <source>Insert the clipboard shapes into this image</source>
@@ -783,12 +858,8 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
         <translation>Усе зображення залишається видимим під час зміни розміру вікна</translation>
     </message>
     <message>
-        <source>Fit to Wi&amp;dth</source>
-        <translation>За &amp;шириною</translation>
-    </message>
-    <message>
-        <source>Match the image width to the window when it is resized</source>
-        <translation>Ширина зображення підлаштовується під вікно під час зміни його розміру</translation>
+        <source>Fit to S&amp;election</source>
+        <translation>За &amp;виділенням</translation>
     </message>
     <message>
         <source>Make the image appear larger</source>
@@ -805,10 +876,6 @@ Switch the AI Text-to-Annotation model to &apos;SAM3 (smart)&apos;, or set the o
     <message>
         <source>Show the image at 100%</source>
         <translation>Показати зображення в масштабі 100%</translation>
-    </message>
-    <message>
-        <source>Ctrl+Wheel zooms the canvas</source>
-        <translation>Ctrl+колесо масштабує полотно</translation>
     </message>
     <message>
         <source>Choose a label to start drawing with it. Press &apos;Esc&apos; to clear the selection.</source>
@@ -863,8 +930,8 @@ Expected location: {path}</source>
 Очікуване розташування: {path}</translation>
     </message>
     <message>
-        <source>File list is disabled when a label file is opened</source>
-        <translation>Список файлів вимкнено, коли відкрито файл міток</translation>
+        <source>Image List is disabled when an annotation file is opened</source>
+        <translation>Список зображень вимкнено, коли відкрито файл анотацій</translation>
     </message>
     <message>
         <source>Add Point to Edge</source>
@@ -879,16 +946,8 @@ Expected location: {path}</source>
         <translation>&amp;Зберегти попередній масштаб</translation>
     </message>
     <message>
-        <source>Permanently delete this label file? This action cannot be undone.</source>
-        <translation>Остаточно видалити цей файл мітки? Цю дію неможливо скасувати.</translation>
-    </message>
-    <message>
         <source>Allowed formats: {formats}</source>
         <translation>Дозволені формати: {formats}</translation>
-    </message>
-    <message>
-        <source>The selected label file could not be opened: {path}</source>
-        <translation>Не вдалося відкрити вибраний файл міток: {path}</translation>
     </message>
     <message>
         <source>The selected image file could not be opened: {path}</source>
@@ -925,6 +984,30 @@ Expected location: {path}</source>
     <message>
         <source>Settings are managed via --config for this session</source>
         <translation>Параметри керуються через --config для цього сеансу</translation>
+    </message>
+    <message>
+        <source>%s - Choose Annotation Folder</source>
+        <translation>%s - Вибрати папку анотацій</translation>
+    </message>
+    <message>
+        <source>Annotation Folder: %s</source>
+        <translation>Папка анотацій: %s</translation>
+    </message>
+    <message>
+        <source>Save Annotation File</source>
+        <translation>Зберегти файл анотацій</translation>
+    </message>
+    <message>
+        <source>Annotation files (*%s)</source>
+        <translation>Файли анотацій (*%s)</translation>
+    </message>
+    <message>
+        <source>Permanently delete this annotation file? This action cannot be undone.</source>
+        <translation>Остаточно видалити цей файл анотацій? Цю дію неможливо скасувати.</translation>
+    </message>
+    <message>
+        <source>Error deleting annotation file</source>
+        <translation>Помилка видалення файлу анотацій</translation>
     </message>
     <message>
         <source>Configuration Error</source>
@@ -1120,8 +1203,8 @@ Expected location: {path}</source>
         <translation>автозбереження автоматичне збереження</translation>
     </message>
     <message>
-        <source>Embeds the image in the label JSON file.</source>
-        <translation>Вбудовує зображення у JSON-файл мітки.</translation>
+        <source>Embed image in annotation file</source>
+        <translation>Вбудовувати зображення у файл анотацій</translation>
     </message>
     <message>
         <source>Shape Color Mode</source>
@@ -1208,8 +1291,8 @@ Expected location: {path}</source>
         <translation>Попередньо визначені мітки</translation>
     </message>
     <message>
-        <source>Embed image in label file</source>
-        <translation>Вбудовувати зображення у файл мітки</translation>
+        <source>Embeds the image in the annotation file.</source>
+        <translation>Вбудовує зображення у файл анотацій.</translation>
     </message>
     <message>
         <source>Label validation</source>
@@ -1346,6 +1429,24 @@ Expected location: {path}</source>
     <message>
         <source>Predefined image flags</source>
         <translation>Попередньо визначені прапорці зображення</translation>
+    </message>
+</context>
+<context>
+    <name>ToolBar</name>
+    <message>
+        <source>More actions</source>
+        <translation>Інші дії</translation>
+    </message>
+</context>
+<context>
+    <name>ZoomWidget</name>
+    <message>
+        <source>Zoom</source>
+        <translation>Збільшити</translation>
+    </message>
+    <message>
+        <source>Ctrl+Wheel zooms the canvas</source>
+        <translation>Ctrl+колесо масштабує полотно</translation>
     </message>
 </context>
 <context>

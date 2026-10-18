@@ -40,6 +40,7 @@ from ._shape_render import Palette
 from ._shape_render import ShapeRenderContext
 from ._shape_render import VertexHighlight
 from ._shape_render import bounds as _shape_bounds
+from ._shape_render import intersects_rect
 from ._shape_render import is_hit_by_point
 from ._shape_render import render_shape
 
@@ -209,6 +210,7 @@ class Canvas(QtWidgets.QWidget):
     point_prompt_rejected = QtCore.Signal(str)
     degenerate_shape_rejected = QtCore.Signal()
     selection_changed = QtCore.Signal(list)
+    shape_double_clicked = QtCore.Signal()
     shape_moved = QtCore.Signal()
     drawing_polygon = QtCore.Signal(bool)
     vertex_selected = QtCore.Signal(bool)
@@ -350,6 +352,11 @@ class Canvas(QtWidgets.QWidget):
 
     def get_view_offset(self) -> QPointF:
         return QPointF(self._view_offset)
+
+    def get_selected_shapes_bounds(self) -> QtCore.QRectF | None:
+        if not self.selected_shapes:
+            return None
+        return _compute_shapes_bounds(shapes=self.selected_shapes)
 
     def set_color_resolver(
         self, *, resolver: Callable[[str], tuple[int, int, int]]
@@ -533,6 +540,8 @@ class Canvas(QtWidgets.QWidget):
         point_labels: Sequence[int],
     ) -> _automation.AiAssistProposal:
         image: np.ndarray = _utils.img_qt_to_rgb_arr(self.pixmap.toImage())
+        if self._pixmap_hash is None:
+            self._pixmap_hash = hash((image.shape, image.tobytes()))
         proposal = self._ai_assist_session.propose_shapes(
             image=image,
             image_id=str(self._pixmap_hash),
@@ -880,13 +889,15 @@ class Canvas(QtWidgets.QWidget):
         self, *, pos: QPointF, event: QtGui.QMouseEvent
     ) -> None:
         is_shift_pressed = bool(event.modifiers() & Qt.KeyboardModifier.ShiftModifier)
+        if self.hovered_shape is not None and self.hovered_shape.locked:
+            # Hovering already hides a locked shape's handles; never drag one.
+            self._drag_selected_shapes(pos=pos)
+            return
         if self._is_vertex_selected():
             self._drag_hovered_vertex(pos=pos, is_shift_pressed=is_shift_pressed)
             return
         if self._is_rotation_point_selected():
             self._drag_hovered_rotation_point(pos=pos)
-            return
-        if not self.selected_shapes:
             return
         self._drag_selected_shapes(pos=pos)
 
@@ -933,11 +944,15 @@ class Canvas(QtWidgets.QWidget):
         )
         self._rotation_original_points = self.hovered_shape.points.copy()
 
+    def _movable_selected_shapes(self) -> list[Shape]:
+        return [shape for shape in self.selected_shapes if not shape.locked]
+
     def _drag_selected_shapes(self, *, pos: QPointF) -> None:
+        shapes = self._movable_selected_shapes()
+        if not shapes:
+            return
         self._apply_cursor(CursorRole.MOVE)
-        self._drag_shapes(
-            shapes=self.selected_shapes, cursor=pos, constrain_cursor=True
-        )
+        self._drag_shapes(shapes=shapes, cursor=pos, constrain_cursor=True)
         self.update()
         self._is_moving_shape = True
 
@@ -1010,6 +1025,10 @@ class Canvas(QtWidgets.QWidget):
                 hovered_vertex=None,
                 hovered_rotation=None,
             )
+            if target.shape.locked:
+                status_messages.append(self.tr("Shape is locked"))
+                self._release_cursor()
+                return
             status_messages.append(self.tr("Click & drag to move shape"))
             self._apply_cursor(CursorRole.GRAB)
             return
@@ -1020,7 +1039,7 @@ class Canvas(QtWidgets.QWidget):
         shape = self._last_hovered_shape
         index = self._last_hovered_edge
         point = self._prev_move_point
-        if shape is None or index is None or point is None:
+        if shape is None or index is None or point is None or shape.locked:
             return
         shape.insert_point(i=index, point=(point.x(), point.y()))
         self._highlight_vertex(index=index, mode="move")
@@ -1034,7 +1053,12 @@ class Canvas(QtWidgets.QWidget):
     def remove_selected_point(self) -> bool:
         shape = self._last_hovered_shape
         index = self._last_hovered_vertex
-        if shape is None or index is None or not shape.can_remove_point():
+        if (
+            shape is None
+            or index is None
+            or shape.locked
+            or not shape.can_remove_point()
+        ):
             return False
         shape.remove_point(i=index)
         self._clear_highlight_state()
@@ -1322,6 +1346,10 @@ class Canvas(QtWidgets.QWidget):
             hovered_shape=self.hovered_shape,
             shapes=self.shapes,
         )
+        if self._is_moving_shape and (moved is None or moved.locked):
+            # Hover says nothing here: it was cleared by a reload, or it rests
+            # on a locked shape. A body drag moves the unlocked selection.
+            moved = next(iter(self._movable_selected_shapes()), None)
         if moved is None:
             return
         index = self.shapes.index(moved)
@@ -1351,12 +1379,26 @@ class Canvas(QtWidgets.QWidget):
         }.get(self.create_mode, MIN_POLYGON_POINT_COUNT)
         return len(self._current.points) >= minimum_points
 
-    def mouseDoubleClickEvent(self, _a0: QtGui.QMouseEvent, /) -> None:
-        if self._double_click != "close":
+    def mouseDoubleClickEvent(self, a0: QtGui.QMouseEvent, /) -> None:
+        if self.mode == _CanvasMode.CREATE:
+            if self._double_click == "close" and self._can_close_shape():
+                self._finalize()
             return
-        if not self._can_close_shape():
+        if a0.button() != Qt.MouseButton.LeftButton:
             return
-        self._finalize()
+        pos: QPointF = self.transform_widget_point_to_image(a0.position())
+        # Like a click, a hovered vertex wins over a body lying under it.
+        shape = (
+            self.hovered_shape
+            if self._hovered_vertex is not None
+            else self._find_shape_at_point(pos)
+        )
+        if shape is None:
+            return
+        self.select_shapes(shapes=[shape])
+        # The first click may have armed deselect-on-release for this shape.
+        self._hovered_shape_is_selected = False
+        self.shape_double_clicked.emit()
 
     def select_shapes(self, *, shapes: list[Shape]) -> None:
         self.selection_changed.emit(shapes)
@@ -1428,7 +1470,7 @@ class Canvas(QtWidgets.QWidget):
             )
             self.selection_changed.emit(new_selection)
             self._hovered_shape_is_selected = False
-        self._record_drag_anchor(shapes=self.selected_shapes, click=point)
+        self._record_drag_anchor(shapes=self._movable_selected_shapes(), click=point)
 
     def _find_shape_at_point(self, point: QPointF, /) -> Shape | None:
         query = np.array([point.x(), point.y()])
@@ -1555,12 +1597,12 @@ class Canvas(QtWidgets.QWidget):
         return True
 
     def delete_selected(self) -> list[Shape]:
-        if not self.selected_shapes:
+        removed = self._movable_selected_shapes()
+        if not removed:
             return []
-        removed = list(self.selected_shapes)
-        self.shapes = [s for s in self.shapes if s not in self.selected_shapes]
+        self.shapes = [s for s in self.shapes if s not in removed]
         self.backup_shapes()
-        self.selected_shapes.clear()
+        self.selected_shapes = [s for s in self.selected_shapes if s.locked]
         self._set_ai_existing_shape_highlights(shapes=[])
         self.update()
         return removed
@@ -1654,12 +1696,25 @@ class Canvas(QtWidgets.QWidget):
         return not self._should_constrain_to_pixmap(cursor)
 
     def _draw_committed_shapes_layer(self, painter: QtGui.QPainter, /) -> None:
+        # Zoomed in, the scroll area shows a small part of the canvas; skip the
+        # shapes outside it. An unshown canvas (offscreen render) has no visible
+        # region, so it paints everything.
+        visible = self.visibleRegion().boundingRect()
+        visible_rect = (
+            None
+            if visible.isEmpty()
+            else painter.transform().inverted()[0].mapRect(QRectF(visible))
+        )
         for shape in self.shapes:
             if not shape.visible:
                 continue
             context = self._render_context(
                 shape=shape, highlighted=shape is self.hovered_shape
             )
+            if visible_rect is not None and not intersects_rect(
+                painter=painter, shape=shape, context=context, rect=visible_rect
+            ):
+                continue
             render_shape(painter=painter, shape=shape, context=context)
 
     def _draw_active_shape_layer(self, painter: QtGui.QPainter, /) -> None:
@@ -1752,7 +1807,7 @@ class Canvas(QtWidgets.QWidget):
             self._ai_assist_session.polygon_detail,
             self._ai_suppress_existing_shape_matches,
             self._allow_out_of_bounds_points,
-            self._pixmap_hash,
+            self.pixmap.cacheKey(),
             tuple(self.shapes),
         )
         if key == self._ai_points_preview_key:
@@ -1889,11 +1944,31 @@ class Canvas(QtWidgets.QWidget):
     def _compute_canvas_size(self) -> QtCore.QSize:
         if self.pixmap.isNull():
             return super().minimumSizeHint()
-        scaled_w = int(self.pixmap.width() * self.scale)
-        scaled_h = int(self.pixmap.height() * self.scale)
+        scaled = self._compute_scaled_pixmap_size()
+        available = self.compute_settled_viewport_size()
+        if available is None:
+            return scaled
+        return scaled.expandedTo(available)
+
+    def _compute_scaled_pixmap_size(self) -> QtCore.QSize:
+        return QtCore.QSize(
+            int(self.pixmap.width() * self.scale),
+            int(self.pixmap.height() * self.scale),
+        )
+
+    def compute_settled_viewport_size(self) -> QtCore.QSize | None:
+        """Return the viewport size once scrollbars match the current scale.
+
+        The scroll area shows or hides its scrollbars after the next layout
+        pass, so the live viewport size lags a scale change until then.
+        """
+        if self.pixmap.isNull():
+            return None
         scroll_area = self._find_scroll_area()
         if scroll_area is None:
-            return QtCore.QSize(scaled_w, scaled_h)
+            return None
+        scaled = self._compute_scaled_pixmap_size()
+        scaled_w, scaled_h = scaled.width(), scaled.height()
 
         viewport_size = scroll_area.maximumViewportSize()
         h_bar_height = scroll_area.horizontalScrollBar().sizeHint().height()
@@ -1907,7 +1982,7 @@ class Canvas(QtWidgets.QWidget):
 
         available_w = viewport_size.width() - (v_bar_width if needs_v_bar else 0)
         available_h = viewport_size.height() - (h_bar_height if needs_h_bar else 0)
-        return QtCore.QSize(max(scaled_w, available_w), max(scaled_h, available_h))
+        return QtCore.QSize(available_w, available_h)
 
     def sizeHint(self) -> QtCore.QSize:
         return self._compute_canvas_size()
@@ -1939,10 +2014,11 @@ class Canvas(QtWidgets.QWidget):
         a0.accept()
 
     def _move_by_keyboard(self, *, offset: QPointF) -> None:
-        if not self.selected_shapes:
+        shapes = self._movable_selected_shapes()
+        if not shapes:
             return
         self._drag_shapes(
-            shapes=self.selected_shapes,
+            shapes=shapes,
             cursor=self._prev_point + offset,
             constrain_cursor=False,
         )
@@ -1976,12 +2052,9 @@ class Canvas(QtWidgets.QWidget):
             if not modifiers:
                 self._snapping = True
         elif self.mode == _CanvasMode.EDIT:
-            if (
-                self._is_moving_shape
-                and self.selected_shapes
-                and self.selected_shapes[0] in self.shapes
-            ):
-                index = self.shapes.index(self.selected_shapes[0])
+            moved = self._movable_selected_shapes()
+            if self._is_moving_shape and moved and moved[0] in self.shapes:
+                index = self.shapes.index(moved[0])
                 if not np.array_equal(
                     self.shape_backups[-1][index].points, self.shapes[index].points
                 ):
@@ -2071,10 +2144,9 @@ class Canvas(QtWidgets.QWidget):
         self._set_ai_existing_shape_highlights(shapes=[])
 
     def load_pixmap(self, *, pixmap: QtGui.QPixmap, clear_shapes: bool = True) -> None:
-        pixmap_arr = _utils.img_qt_to_arr(pixmap.toImage())
         self.pixmap = pixmap
         self._drag_anchor = None
-        self._pixmap_hash = hash(pixmap_arr.tobytes())
+        self._pixmap_hash = None
         # A new image is a fresh inference context that should surface its own
         # first failure rather than staying muted by the prior image's latch.
         self._ai_inference_failed = False

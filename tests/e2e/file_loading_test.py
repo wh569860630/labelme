@@ -3,6 +3,8 @@ from __future__ import annotations
 import base64
 import json
 import shutil
+import struct
+import zlib
 from collections.abc import Callable
 from pathlib import Path
 from typing import Literal
@@ -15,6 +17,7 @@ from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
 from labelme._app import MainWindow
+from labelme._label_file import read_label_file
 
 from ..conftest import assert_labelfile_sanity
 from ..conftest import close_or_pause
@@ -140,7 +143,7 @@ def test_reopening_directory_preserves_session_when_first_image_fails(
     annotation_before = win._annotation
     current_item_before = win._docks.file_list.currentItem()
     assert current_item_before is not None
-    current_path_before = current_item_before.text()
+    current_path_before = current_item_before.data(Qt.ItemDataRole.UserRole)
 
     current_image.write_bytes(b"not an image")
     win._load_from_file_or_dir(file_or_dir=str(current_image.parent))
@@ -149,7 +152,7 @@ def test_reopening_directory_preserves_session_when_first_image_fails(
     assert win._annotation is annotation_before
     current_item = win._docks.file_list.currentItem()
     assert current_item is not None
-    assert current_item.text() == current_path_before
+    assert current_item.data(Qt.ItemDataRole.UserRole) == current_path_before
     assert win._docks.file_list.currentRow() == 0
 
     close_or_pause(qtbot=qtbot, widget=win, pause=pause)
@@ -221,6 +224,88 @@ def test_MainWindow_prompts_when_image_exceeds_decode_limit(
     else:
         assert raw_win._annotation is annotation_before
         assert raw_win._image_path == image_path_before
+
+    close_or_pause(qtbot=qtbot, widget=raw_win, pause=pause)
+
+
+@pytest.mark.gui
+@pytest.mark.parametrize("open_via", ["image", "label"])
+def test_MainWindow_rejects_oversized_image_from_header_instantly(
+    *,
+    open_via: Literal["image", "label"],
+    raw_win: MainWindow,
+    qtbot: QtBot,
+    tmp_path: Path,
+    critical_messages: list[str],
+    pause: bool,
+) -> None:
+    def make_chunk(chunk_type: bytes, data: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(data))
+            + chunk_type
+            + data
+            + struct.pack(">I", zlib.crc32(chunk_type + data) & 0xFFFFFFFF)
+        )
+
+    ihdr = struct.pack(">IIBBBBB", 37296, 49319, 8, 2, 0, 0, 0)
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n"
+        + make_chunk(b"IHDR", ihdr)
+        + make_chunk(b"IDAT", b"")
+        + make_chunk(b"IEND", b"")
+    )
+    image_path = tmp_path / "oversized.png"
+    image_path.write_bytes(png_bytes)
+    open_path = image_path
+    if open_via == "label":
+        open_path = tmp_path / "oversized.json"
+        open_path.write_text(
+            json.dumps({"imagePath": image_path.name, "imageData": None, "shapes": []})
+        )
+
+    annotation_before = raw_win._annotation
+    image_path_before = raw_win._image_path
+
+    loaded = raw_win._load_file(image_or_label_path=str(open_path))
+
+    assert loaded is False
+    assert len(critical_messages) == 1
+    assert "37296x49319" in critical_messages[0]
+    assert "32767" in critical_messages[0]
+    assert "gdal_retile.py" in critical_messages[0]
+    assert raw_win._annotation is annotation_before
+    assert raw_win._image_path == image_path_before
+
+    close_or_pause(qtbot=qtbot, widget=raw_win, pause=pause)
+
+
+@pytest.mark.gui
+@pytest.mark.parametrize("open_via", ["image", "label"])
+def test_MainWindow_opens_wide_image_within_decode_limit(
+    *,
+    open_via: Literal["image", "label"],
+    raw_win: MainWindow,
+    qtbot: QtBot,
+    tmp_path: Path,
+    critical_messages: list[str],
+    pause: bool,
+) -> None:
+    image_path = tmp_path / "wide.png"
+    image = QtGui.QImage(40000, 100, QtGui.QImage.Format.Format_Grayscale8)
+    image.fill(0)
+    assert image.save(str(image_path))
+    open_path = image_path
+    if open_via == "label":
+        open_path = tmp_path / "wide.json"
+        open_path.write_text(
+            json.dumps({"imagePath": image_path.name, "imageData": None, "shapes": []})
+        )
+
+    loaded = raw_win._load_file(image_or_label_path=str(open_path))
+
+    assert loaded is True
+    assert critical_messages == []
+    assert raw_win._canvas_widgets.canvas.pixmap.width() == 40000
 
     close_or_pause(qtbot=qtbot, widget=raw_win, pause=pause)
 
@@ -404,7 +489,7 @@ def test_failed_navigation_preserves_current_session(
     assert win._docks.file_list.currentRow() == row_before
     current_item = win._docks.file_list.currentItem()
     assert current_item is not None
-    assert current_item.text() == str(current_image)
+    assert current_item.data(Qt.ItemDataRole.UserRole) == str(current_image)
 
     close_or_pause(qtbot=qtbot, widget=win, pause=pause)
 
@@ -436,11 +521,52 @@ def test_failed_navigation_restores_selected_source_item(
     qtbot.waitUntil(lambda: len(critical_messages) == 1)
     current_item = win._docks.file_list.currentItem()
     assert current_item is not None
-    assert current_item.text() == str(current_image)
+    assert current_item.data(Qt.ItemDataRole.UserRole) == str(current_image)
     assert win._docks.file_list.currentRow() == 0
     assert "[1/2]" in win.windowTitle()
 
     close_or_pause(qtbot=qtbot, widget=win, pause=pause)
+
+
+@pytest.mark.gui
+@pytest.mark.parametrize("use_output_dir", [False, True])
+def test_auto_save_uses_source_image_when_embedded_path_differs(
+    *,
+    main_win: MainWinFactory,
+    qtbot: QtBot,
+    create_annotated_session_image: Path,
+    tmp_path: Path,
+    critical_messages: list[str],
+    use_output_dir: bool,
+) -> None:
+    image_path = create_annotated_session_image
+    output_dir = tmp_path / "output" if use_output_dir else image_path.parent
+    output_dir.mkdir(exist_ok=True)
+    label_path = output_dir / image_path.with_suffix(".json").name
+    annotation_data = json.loads(image_path.with_suffix(".json").read_text())
+    annotation_data["imagePath"] = "embedded-source.jpg"
+    annotation_data["imageData"] = base64.b64encode(image_path.read_bytes()).decode()
+    label_path.write_text(json.dumps(annotation_data))
+    win = main_win(
+        file_or_dir=image_path.parent,
+        config_overrides={"auto_save": True},
+        output_dir=output_dir if use_output_dir else None,
+    )
+    show_window_and_wait_for_imagedata(qtbot=qtbot, win=win)
+    item = win._docks.file_list.currentItem()
+    assert item is not None
+    item.setCheckState(Qt.CheckState.Unchecked)
+    win._canvas_widgets.canvas.shapes[0].label = "updated"
+    win.mark_dirty()
+    qtbot.waitUntil(lambda: not win._save_writer.is_busy)
+
+    assert json.loads(label_path.read_text())["shapes"][0]["label"] == "updated"
+    assert not (output_dir / "embedded-source.json").exists()
+    assert item.checkState() == Qt.CheckState.Checked
+    assert win.current_label_file_path() == str(label_path)
+    assert read_label_file(filename=str(label_path)).image_data
+    assert win._load_file(image_or_label_path=str(image_path))
+    assert critical_messages == []
 
 
 @pytest.mark.gui
@@ -466,7 +592,7 @@ def test_direct_image_open_preserves_source_selection(
 
     current_item = win._docks.file_list.currentItem()
     assert current_item is not None
-    assert current_item.text() == str(direct_image)
+    assert current_item.data(Qt.ItemDataRole.UserRole) == str(direct_image)
     assert win._docks.file_list.currentRow() == 1
     assert "[2/2]" in win.windowTitle()
     assert win._image_path != str(direct_image)
@@ -474,7 +600,7 @@ def test_direct_image_open_preserves_source_selection(
     win._docks.file_search.setText(r"02-direct\.jpg$")
     current_item = win._docks.file_list.currentItem()
     assert current_item is not None
-    assert current_item.text() == str(direct_image)
+    assert current_item.data(Qt.ItemDataRole.UserRole) == str(direct_image)
     assert "[1/1]" in win.windowTitle()
 
     win._docks.file_search.clear()
@@ -755,3 +881,27 @@ def test_image_flags_survive_save_and_navigation(
     win._open_prev_image()
     assert list(win._read_flag_dock_states().items()) == expected
     assert not win._is_changed
+
+
+@pytest.mark.gui
+def test_opening_one_image_prefetches_its_folder_neighbors(
+    *,
+    main_win: MainWinFactory,
+    qtbot: QtBot,
+    data_path: Path,
+    tmp_path: Path,
+    pause: bool,
+) -> None:
+    source_image = data_path / "annotated/2011_000003.jpg"
+    paths = [tmp_path / f"{i}.jpg" for i in range(3)]
+    for path in paths:
+        shutil.copyfile(src=source_image, dst=path)
+
+    win = main_win(file_or_dir=paths[1])
+    show_window_and_wait_for_imagedata(qtbot=qtbot, win=win)
+
+    # The Image List fills only after the image loads; its neighbors are
+    # still scheduled.
+    assert set(win._image_prefetcher._decoded) == {str(path) for path in paths}
+
+    close_or_pause(qtbot=qtbot, widget=win, pause=pause)
